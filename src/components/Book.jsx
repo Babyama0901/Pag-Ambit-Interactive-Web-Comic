@@ -2,6 +2,73 @@ import React, { useRef, useState, useEffect } from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import Controls from './Controls';
 
+// ImageWithOverlay Component
+const ImageWithOverlay = ({ src, alt, pageNum }) => {
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  return (
+    <div
+      className="relative w-full h-full group"
+      onMouseEnter={() => setShowOverlay(true)}
+      onMouseLeave={() => setShowOverlay(false)}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover"
+        onError={(e) => { e.target.src = 'https://placehold.co/450x636/e9d5ff/6b21a8?text=Page+' + pageNum }}
+      />
+
+      {/* Overlay with Pop-up Animation */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-br from-purple-600/95 via-violet-600/95 to-indigo-600/95 
+                    flex items-center justify-center backdrop-blur-sm
+                    transition-all duration-300 ease-out
+                    ${showOverlay
+            ? 'opacity-100 scale-100'
+            : 'opacity-0 scale-95 pointer-events-none'
+          }`}
+        style={{
+          transformOrigin: 'center center'
+        }}
+      >
+        <div className={`text-center space-y-4 px-6 transition-all duration-300 delay-75
+                         ${showOverlay ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+          {/* Icon with Pop Animation */}
+          <div className={`w-20 h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center
+                          backdrop-blur-sm border-2 border-white/30 shadow-2xl
+                          transition-all duration-300 delay-100
+                          ${showOverlay ? 'scale-100 rotate-0' : 'scale-0 rotate-45'}`}>
+            <span className="text-4xl">🖼️</span>
+          </div>
+
+          {/* Text Content */}
+          <div className={`transition-all duration-300 delay-150
+                          ${showOverlay ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+            <h3 className="text-white font-bold text-xl mb-2">Page {pageNum}</h3>
+            <p className="text-white/90 text-sm">Interactive Comic Panel</p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className={`flex gap-3 justify-center transition-all duration-300 delay-200
+                          ${showOverlay ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+            <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm
+                             backdrop-blur-sm border border-white/30 transition-all duration-200
+                             hover:scale-105 active:scale-95">
+              View Details
+            </button>
+            <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm
+                             backdrop-blur-sm border border-white/30 transition-all duration-200
+                             hover:scale-105 active:scale-95">
+              Zoom
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function Book() {
   const audioRef = useRef(null);
   const bookRef = useRef(null);
@@ -275,24 +342,21 @@ function Book() {
 
           {/* Page 1 */}
           <div className="page bg-white p-0 overflow-hidden">
-            <div className="w-full h-full relative">
-              <img
-                src="/SCENE 13 - PANEL 1.png"
-                alt="Page 1"
-                className="w-full h-full object-cover"
-                onError={(e) => { e.target.src = 'https://placehold.co/400x600/png?text=Page+1' }}
-              />
-              <span className="absolute bottom-4 right-4 text-xs font-bold text-slate-400">1</span>
-            </div>
+            <ImageWithOverlay
+              src="/SCENE 13 - PANEL 1.png"
+              alt="Page 1"
+              pageNum={1}
+            />
           </div>
 
           {/* Generated Pages */}
           {Array.from({ length: 38 }, (_, i) => i + 2).map((pageNum) => (
             <div key={pageNum} className="page bg-white p-0 overflow-hidden border-l border-slate-100">
-              <div className="w-full h-full relative flex items-center justify-center bg-slate-50">
-                <div className="text-slate-300 text-4xl font-bold opacity-20">Page {pageNum}</div>
-                <span className="absolute bottom-4 right-4 text-xs font-bold text-slate-400">{pageNum}</span>
-              </div>
+              <ImageWithOverlay
+                src={`https://placehold.co/450x636/f8f9fa/6b21a8?text=Page+${pageNum}`}
+                alt={`Page ${pageNum}`}
+                pageNum={pageNum}
+              />
             </div>
           ))}
 
