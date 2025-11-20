@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import HTMLFlipBook from 'react-pageflip';
 import Controls from './Controls';
 
-// ImageWithOverlay Component - Speech Bubble Style
+// ImageWithOverlay Component
 const ImageWithOverlay = ({ src, alt, pageNum }) => {
   const [showOverlay, setShowOverlay] = useState(false);
 
@@ -19,67 +19,49 @@ const ImageWithOverlay = ({ src, alt, pageNum }) => {
         onError={(e) => { e.target.src = 'https://placehold.co/450x636/e9d5ff/6b21a8?text=Page+' + pageNum }}
       />
 
-      {/* Speech Bubble Overlay - Top Left Corner */}
+      {/* Overlay with Pop-up Animation */}
       <div
-        className={`absolute top-6 left-6 transition-all duration-300 ease-out
+        className={`absolute inset-0 bg-gradient-to-br from-purple-600/95 via-violet-600/95 to-indigo-600/95 
+                    flex items-center justify-center backdrop-blur-sm
+                    transition-all duration-300 ease-out
                     ${showOverlay
             ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-75 pointer-events-none'
+            : 'opacity-0 scale-95 pointer-events-none'
           }`}
         style={{
-          transformOrigin: 'top left',
-          maxWidth: '280px'
+          transformOrigin: 'center center'
         }}
       >
-        {/* Speech Bubble */}
-        <div className="relative bg-white rounded-3xl p-6 shadow-2xl"
-          style={{
-            border: '4px solid #2d3748',
-          }}>
-
-          {/* Speech Bubble Tail */}
-          <div className="absolute -bottom-5 left-8"
-            style={{
-              width: 0,
-              height: 0,
-              borderLeft: '20px solid transparent',
-              borderRight: '20px solid transparent',
-              borderTop: '25px solid #2d3748',
-            }}>
-            <div className="absolute -top-6 -left-4"
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: '16px solid transparent',
-                borderRight: '16px solid transparent',
-                borderTop: '21px solid white',
-              }}>
-            </div>
+        <div className={`text-center space-y-4 px-6 transition-all duration-300 delay-75
+                         ${showOverlay ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+          {/* Icon with Pop Animation */}
+          <div className={`w-20 h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center
+                          backdrop-blur-sm border-2 border-white/30 shadow-2xl
+                          transition-all duration-300 delay-100
+                          ${showOverlay ? 'scale-100 rotate-0' : 'scale-0 rotate-45'}`}>
+            <span className="text-4xl">🖼️</span>
           </div>
 
-          {/* Content */}
-          <div className={`space-y-3 transition-all duration-300 delay-100
-                          ${showOverlay ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}>
-            {/* Icon */}
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-3xl">🖼️</span>
-              <div>
-                <h3 className="text-slate-800 font-bold text-lg leading-tight">Page {pageNum}</h3>
-                <p className="text-slate-600 text-xs">Interactive Panel</p>
-              </div>
-            </div>
+          {/* Text Content */}
+          <div className={`transition-all duration-300 delay-150
+                          ${showOverlay ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+            <h3 className="text-white font-bold text-xl mb-2">Page {pageNum}</h3>
+            <p className="text-white/90 text-sm">Interactive Comic Panel</p>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-2">
-              <button className="flex-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-semibold
-                               transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
-                View
-              </button>
-              <button className="flex-1 px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-sm font-semibold
-                               transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
-                Zoom
-              </button>
-            </div>
+          {/* Action Buttons */}
+          <div className={`flex gap-3 justify-center transition-all duration-300 delay-200
+                          ${showOverlay ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+            <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm
+                             backdrop-blur-sm border border-white/30 transition-all duration-200
+                             hover:scale-105 active:scale-95">
+              View Details
+            </button>
+            <button className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm
+                             backdrop-blur-sm border border-white/30 transition-all duration-200
+                             hover:scale-105 active:scale-95">
+              Zoom
+            </button>
           </div>
         </div>
       </div>
