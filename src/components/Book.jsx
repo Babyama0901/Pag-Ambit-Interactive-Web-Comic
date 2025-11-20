@@ -202,6 +202,14 @@ function Book() {
     setCurrentPage(lastPage);
   };
 
+  const handleHighlight = () => {
+    alert('✨ Highlighting feature coming soon!');
+  };
+
+  const handleNotes = () => {
+    alert('📝 Notes feature coming soon!');
+  };
+
   return (
     <div ref={containerRef} className={`relative w-full h-full flex flex-col items-center justify-center transition-colors duration-500 ${isNightMode ? 'bg-slate-950/50' : ''} overflow-hidden`}>
 
