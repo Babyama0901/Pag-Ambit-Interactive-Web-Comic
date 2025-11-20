@@ -9,7 +9,14 @@ import {
     Minimize,
     Bookmark,
     Download,
-    Share2
+    Share2,
+    Search,
+    List,
+    Moon,
+    Sun,
+    Printer,
+    SkipBack,
+    SkipForward
 } from 'lucide-react';
 
 const Controls = ({
@@ -17,88 +24,123 @@ const Controls = ({
     totalPages,
     isMuted,
     isFullscreen,
+    isNightMode = false,
     onPrevPage,
     onNextPage,
     onToggleMute,
     onToggleFullscreen,
     onBookmark,
     onDownload,
-    onShare
+    onShare,
+    onSearch,
+    onTableOfContents,
+    onToggleNightMode,
+    onPrint,
+    onJumpToCover,
+    onJumpToEnd
 }) => {
     const progress = Math.round(((currentPage) / totalPages) * 100);
 
     return (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl glass-panel px-6 py-4 flex items-center justify-between z-50 transition-all duration-300 hover:bg-white/15">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl glass-panel px-4 py-3 z-50 transition-all duration-300 hover:bg-white/15">
+            <div className="flex items-center justify-between gap-4">
 
-            {/* Left Group: Audio & Info */}
-            <div className="flex items-center gap-6">
-                <button
-                    onClick={onToggleMute}
-                    className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-300 hover:text-white"
-                    title={isMuted ? "Unmute" : "Mute"}
-                >
-                    {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-                </button>
+                {/* Left Group: Audio & Progress */}
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={onToggleMute}
+                        className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-300 hover:text-white"
+                        title={isMuted ? "Unmute" : "Mute"}
+                    >
+                        {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                    </button>
 
-                <div className="hidden md:flex flex-col">
-                    <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Progress</span>
-                    <span className="text-sm text-white font-bold">{progress}% Completed</span>
-                </div>
-            </div>
-
-            {/* Center Group: Navigation */}
-            <div className="flex items-center gap-4 md:gap-8">
-                <button
-                    onClick={onPrevPage}
-                    className="group flex flex-col items-center gap-1 p-2 hover:bg-white/5 rounded-lg transition-all"
-                    title="Previous Page"
-                >
-                    <ChevronLeft size={24} className="text-slate-300 group-hover:text-white group-hover:-translate-x-1 transition-transform" />
-                </button>
-
-                <div className="flex flex-col items-center min-w-[80px]">
-                    <span className="text-2xl font-bold text-white tabular-nums">
-                        {String(currentPage + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-widest">Page</span>
+                    <div className="hidden lg:flex flex-col">
+                        <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Progress</span>
+                        <span className="text-xs text-white font-bold">{progress}%</span>
+                    </div>
                 </div>
 
-                <button
-                    onClick={onNextPage}
-                    className="group flex flex-col items-center gap-1 p-2 hover:bg-white/5 rounded-lg transition-all"
-                    title="Next Page"
-                >
-                    <ChevronRight size={24} className="text-slate-300 group-hover:text-white group-hover:translate-x-1 transition-transform" />
-                </button>
-            </div>
+                {/* Center Group: Navigation */}
+                <div className="flex items-center gap-3 md:gap-6">
+                    <button
+                        onClick={onPrevPage}
+                        className="group flex items-center gap-1 p-2 hover:bg-white/5 rounded-lg transition-all"
+                        title="Previous Page"
+                    >
+                        <ChevronLeft size={20} className="text-slate-300 group-hover:text-white group-hover:-translate-x-1 transition-transform" />
+                    </button>
 
-            {/* Right Group: Actions */}
-            <div className="flex items-center gap-2 md:gap-3">
-                <div className="flex items-center gap-1 md:gap-2 mr-2 md:mr-4 border-r border-white/10 pr-2 md:pr-4">
-                    <ActionButton icon={Bookmark} onClick={onBookmark} label="Bookmark" />
-                    <ActionButton icon={Download} onClick={onDownload} label="Download" />
-                    <ActionButton icon={Share2} onClick={onShare} label="Share" />
+                    <div className="flex flex-col items-center min-w-[60px]">
+                        <span className="text-xl font-bold text-white tabular-nums">
+                            {String(currentPage + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-[9px] text-slate-400 uppercase tracking-widest">Page</span>
+                    </div>
+
+                    <button
+                        onClick={onNextPage}
+                        className="group flex items-center gap-1 p-2 hover:bg-white/5 rounded-lg transition-all"
+                        title="Next Page"
+                    >
+                        <ChevronRight size={20} className="text-slate-300 group-hover:text-white group-hover:translate-x-1 transition-transform" />
+                    </button>
                 </div>
 
-                <button
-                    onClick={onToggleFullscreen}
-                    className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-300 hover:text-white"
-                    title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                >
-                    {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
-                </button>
+                {/* Right Group: Student Tools & Actions */}
+                <div className="flex items-center gap-2">
+                    {/* Quick Navigation */}
+                    <div className="hidden md:flex items-center gap-1 mr-2 border-r border-white/10 pr-3">
+                        <ActionButton icon={SkipBack} onClick={onJumpToCover} label="Jump to Cover" variant="accent" />
+                        <ActionButton icon={SkipForward} onClick={onJumpToEnd} label="Jump to End" variant="accent" />
+                    </div>
+
+                    {/* Study Tools */}
+                    <div className="hidden md:flex items-center gap-1 mr-2 border-r border-white/10 pr-3">
+                        <ActionButton icon={Search} onClick={onSearch} label="Search" />
+                        <ActionButton icon={List} onClick={onTableOfContents} label="Contents" />
+                    </div>
+
+                    {/* Utility Tools */}
+                    <div className="hidden md:flex items-center gap-1 mr-2 border-r border-white/10 pr-3">
+                        <ActionButton icon={Bookmark} onClick={onBookmark} label="Bookmark" />
+                        <ActionButton icon={Printer} onClick={onPrint} label="Print" />
+                        <ActionButton icon={Download} onClick={onDownload} label="Download" />
+                        <ActionButton icon={Share2} onClick={onShare} label="Share" />
+                    </div>
+
+                    {/* Display Controls */}
+                    <button
+                        onClick={onToggleNightMode}
+                        className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-300 hover:text-white"
+                        title={isNightMode ? "Day Mode" : "Night Mode"}
+                    >
+                        {isNightMode ? <Sun size={18} /> : <Moon size={18} />}
+                    </button>
+
+                    <button
+                        onClick={onToggleFullscreen}
+                        className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-300 hover:text-white"
+                        title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                    >
+                        {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+                    </button>
+                </div>
             </div>
         </div>
     );
 };
 
-const ActionButton = ({ icon: Icon, onClick, label }) => (
+const ActionButton = ({ icon: Icon, onClick, label, variant = 'default' }) => (
     <button
         onClick={onClick}
-        className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+        className={`p-2 rounded-lg transition-all ${variant === 'accent'
+            ? 'text-purple-400 hover:text-purple-300 hover:bg-purple-500/10'
+            : 'text-slate-400 hover:text-white hover:bg-white/10'
+            }`}
         title={label}
     >
-        <Icon size={18} />
+        <Icon size={16} />
     </button>
 );
 

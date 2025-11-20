@@ -9,6 +9,7 @@ function Book() {
   const [currentPage, setCurrentPage] = useState(0);
   const totalPages = 40;
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isNightMode, setIsNightMode] = useState(false);
 
   // Audio unlock logic
   useEffect(() => {
@@ -167,19 +168,53 @@ function Book() {
       .catch(() => alert('Failed to copy link'));
   };
 
+  const handleSearch = () => {
+    const query = prompt('🔍 Search the book:');
+    if (query) {
+      alert(`Searching for "${query}"...\nThis feature will be fully implemented soon!`);
+      // TODO: Implement search functionality
+    }
+  };
+
+  const handleTableOfContents = () => {
+    alert('📑 Table of Contents:\n\nCover - Page 0\nChapter 1 - Page 1\nChapter 2 - Page 10\nChapter 3 - Page 20\n\n(Jump to page feature coming soon!)');
+    // TODO: Implement table of contents with page jumping
+  };
+
+  const toggleNightMode = () => {
+    setIsNightMode(!isNightMode);
+  };
+
+  const handlePrint = () => {
+    alert(`🖨️ Printing page ${currentPage + 1}...\nPrint dialog will open soon!`);
+    // TODO: Implement print functionality
+    // window.print();
+  };
+
+  const handleJumpToCover = () => {
+    bookRef.current?.pageFlip()?.flip(0);
+    setCurrentPage(0);
+  };
+
+  const handleJumpToEnd = () => {
+    const lastPage = totalPages - 1;
+    bookRef.current?.pageFlip()?.flip(lastPage);
+    setCurrentPage(lastPage);
+  };
+
   return (
-    <div ref={containerRef} className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden">
+    <div ref={containerRef} className={`relative w-full h-full flex flex-col items-center justify-center transition-colors duration-500 ${isNightMode ? 'bg-slate-950/50' : ''} overflow-hidden`}>
 
       {/* Book Container */}
       <div className="relative z-10 flex items-center justify-center">
         <HTMLFlipBook
-          width={dimensions.width}
-          height={dimensions.height}
+          width={450}
+          height={636}
           size="fixed"
-          minWidth={200}
-          maxWidth={600}
-          minHeight={300}
-          maxHeight={800}
+          minWidth={318}
+          maxWidth={595}
+          minHeight={450}
+          maxHeight={842}
           maxShadowOpacity={0.5}
           showCover={true}
           mobileScrollSupport={true}
@@ -188,17 +223,43 @@ function Book() {
           ref={bookRef}
           onFlip={handleFlip}
         >
-          {/* Cover Page */}
-          <div className="page cover bg-gradient-to-br from-purple-900 to-indigo-900 text-white flex flex-col items-center justify-center p-8 border-r-4 border-purple-950">
-            <div className="text-center space-y-6">
-              <div className="w-32 h-32 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
-                <span className="text-4xl">📚</span>
+          {/* Front Cover */}
+          <div className="page cover bg-gradient-to-br from-purple-900 via-violet-800 to-indigo-900 text-white flex flex-col items-center justify-center p-8 border-r-4 border-purple-950 relative overflow-hidden"
+            style={{
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 8s ease infinite'
+            }}>
+            {/* Animated background overlay */}
+            <div className="absolute inset-0 opacity-30" style={{
+              background: 'radial-gradient(circle at 30% 50%, rgba(168, 85, 247, 0.4) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(99, 102, 241, 0.4) 0%, transparent 50%)',
+              animation: 'float 6s ease-in-out infinite'
+            }}></div>
+
+            <div className="text-center space-y-6 relative z-10">
+              {/* Animated icon with floating and glow */}
+              <div className="w-32 h-32 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner"
+                style={{
+                  animation: 'float 4s ease-in-out infinite, pulseGlow 3s ease-in-out infinite'
+                }}>
+                <span className="text-4xl" style={{ animation: 'scaleIn 1s ease-out' }}>📚</span>
               </div>
-              <div>
-                <h1 className="text-5xl font-black tracking-tighter mb-2 font-serif">PAGAMBIT</h1>
-                <p className="text-purple-200 text-sm tracking-[0.2em] uppercase">Interactive Comic</p>
+
+              {/* Animated title */}
+              <div style={{ animation: 'fadeInDown 1.2s ease-out 0.3s both' }}>
+                <h1 className="text-5xl font-black tracking-tighter mb-2 font-serif bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+                  style={{
+                    backgroundSize: '200% auto',
+                    animation: 'gradientShift 4s linear infinite, fadeInDown 1.2s ease-out 0.3s both'
+                  }}>
+                  PAGAMBIT
+                </h1>
+                <p className="text-purple-200 text-sm tracking-[0.2em] uppercase" style={{ animation: 'fadeInUp 1.2s ease-out 0.5s both' }}>
+                  Interactive Comic
+                </p>
               </div>
-              <div className="pt-12">
+
+              {/* Animated footer */}
+              <div className="pt-12" style={{ animation: 'fadeInUp 1.2s ease-out 0.7s both' }}>
                 <p className="text-xs text-purple-300/60">Mel Creatives Presents</p>
               </div>
             </div>
@@ -228,16 +289,42 @@ function Book() {
           ))}
 
           {/* Back Cover */}
-          <div className="page cover bg-gradient-to-br from-purple-900 to-indigo-900 text-white flex flex-col items-center justify-center p-8 border-l-4 border-purple-950">
-            <div className="text-center space-y-6">
-              <div className="w-24 h-24 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
-                <span className="text-3xl">🏁</span>
+          <div className="page cover bg-gradient-to-br from-indigo-900 via-purple-800 to-violet-900 text-white flex flex-col items-center justify-center p-8 border-l-4 border-purple-950 relative overflow-hidden"
+            style={{
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 8s ease infinite reverse'
+            }}>
+            {/* Animated background overlay */}
+            <div className="absolute inset-0 opacity-30" style={{
+              background: 'radial-gradient(circle at 70% 50%, rgba(99, 102, 241, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 50%, rgba(168, 85, 247, 0.4) 0%, transparent 50%)',
+              animation: 'float 6s ease-in-out infinite reverse'
+            }}></div>
+
+            <div className="text-center space-y-6 relative z-10">
+              {/* Animated icon with floating and glow */}
+              <div className="w-24 h-24 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner"
+                style={{
+                  animation: 'float 4s ease-in-out infinite, pulseGlow 3s ease-in-out infinite'
+                }}>
+                <span className="text-3xl" style={{ animation: 'scaleIn 1s ease-out' }}>🏁</span>
               </div>
-              <div>
-                <h1 className="text-3xl font-black tracking-tighter mb-2 font-serif">THE END</h1>
-                <p className="text-purple-200 text-xs tracking-[0.2em] uppercase">Thanks for reading</p>
+
+              {/* Animated title */}
+              <div style={{ animation: 'fadeInDown 1.2s ease-out 0.3s both' }}>
+                <h1 className="text-3xl font-black tracking-tighter mb-2 font-serif bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+                  style={{
+                    backgroundSize: '200% auto',
+                    animation: 'gradientShift 4s linear infinite, fadeInDown 1.2s ease-out 0.3s both'
+                  }}>
+                  THE END
+                </h1>
+                <p className="text-purple-200 text-xs tracking-[0.2em] uppercase" style={{ animation: 'fadeInUp 1.2s ease-out 0.5s both' }}>
+                  Thanks for reading
+                </p>
               </div>
-              <div className="pt-8">
+
+              {/* Animated footer */}
+              <div className="pt-8" style={{ animation: 'fadeInUp 1.2s ease-out 0.7s both' }}>
                 <p className="text-[10px] text-purple-300/60">© 2024 Mel Creatives</p>
               </div>
             </div>
@@ -251,6 +338,7 @@ function Book() {
         totalPages={totalPages}
         isMuted={isMuted}
         isFullscreen={isFullscreen}
+        isNightMode={isNightMode}
         onPrevPage={prevPage}
         onNextPage={nextPage}
         onToggleMute={toggleMute}
@@ -258,6 +346,14 @@ function Book() {
         onBookmark={handleBookmark}
         onDownload={handleDownload}
         onShare={handleShare}
+        onHighlight={handleHighlight}
+        onNotes={handleNotes}
+        onSearch={handleSearch}
+        onTableOfContents={handleTableOfContents}
+        onToggleNightMode={toggleNightMode}
+        onPrint={handlePrint}
+        onJumpToCover={handleJumpToCover}
+        onJumpToEnd={handleJumpToEnd}
       />
 
       {/* Hidden Audio Element */}
