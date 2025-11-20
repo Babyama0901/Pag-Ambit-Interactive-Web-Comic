@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;900&display=swap');
+
+:root {
+  font-family: 'Inter', sans-serif;
+  --primary: #6a00f4;
+  --secondary: #2b0650;
+  --accent: #b388ff;
+  --background: #0f172a;
+  --text: #f8fafc;
+}
+
+body {
+  @apply bg-slate-900 text-slate-50 overflow-hidden;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#root {
+  @apply w-full h-full flex items-center justify-center;
+}
+
+/* Modern Animated Background */
+.app-background {
+  @apply fixed inset-0 -z-10;
+  background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0f172a 100%);
+}
+
+.app-background::before {
+  content: '';
+  @apply absolute inset-0 opacity-30;
+  background:
+    radial-gradient(circle at 20% 30%, var(--primary) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, var(--secondary) 0%, transparent 50%);
+  filter: blur(60px);
+  animation: pulse-glow 10s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+.glass-panel {
+  @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl;
+}
