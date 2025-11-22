@@ -414,7 +414,7 @@ function Book() {
                 </div>
               ) : (
                 <MediaPage
-                  src={page.src}
+                  src={`${import.meta.env.BASE_URL}${page.src}`}
                   alt={`Page ${index + 1}`}
                   pageNum={index + 1}
                   hasSpeechBubble={page.hasSpeechBubble}
