@@ -4,7 +4,7 @@ import Controls from './Controls';
 import Modal from './Modal';
 
 // MediaPage Component (handles both Images and Videos)
-const MediaPage = ({ src, alt, pageNum }) => {
+const MediaPage = ({ src, alt, pageNum, hasSpeechBubble, speechText }) => {
   const [showOverlay, setShowOverlay] = useState(false);
   const isVideo = src.toLowerCase().endsWith('.mp4');
 
@@ -33,7 +33,7 @@ const MediaPage = ({ src, alt, pageNum }) => {
       )}
 
       {/* Speech Bubble Overlay - Only show for images or if requested */}
-      {!isVideo && (
+      {!isVideo && hasSpeechBubble && (
         <div
           className={`absolute inset-0 flex items-center justify-center pointer-events-none`}
         >
@@ -61,7 +61,7 @@ const MediaPage = ({ src, alt, pageNum }) => {
             {/* Content */}
             <div className="text-center z-10">
               <h3 className="font-black text-2xl mb-2 tracking-tighter transform -rotate-2">
-                OPEN OVERLAY!
+                {speechText || "OPEN OVERLAY!"}
               </h3>
             </div>
 
@@ -83,9 +83,12 @@ function Book() {
 
   // Pages configuration
   const pages = [
-    { src: "scene 1.1.png", type: "image" },
-    { src: "scene 1.2.png", type: "image" },
-    { src: "scene 1.3.png", type: "image" },
+    { src: "scene 1.1.png", type: "image" }, // Page 1
+    { type: "toc" }, // Page 2
+    { src: "SCENE 1/scene 1.1.png", type: "image", hasSpeechBubble: true, speechText: "Welcome to Scene 1!" }, // Page 3
+    { src: "SCENE 1/scene 1.2.png", type: "image", hasSpeechBubble: true, speechText: "Something is happening..." }, // Page 4
+    { src: "SCENE 1/scene 1.3.png", type: "image", hasSpeechBubble: true, speechText: "Watch out!" }, // Page 5
+    { src: "https://placehold.co/450x636/e9d5ff/6b21a8?text=Page+6", type: "image", hasSpeechBubble: true, speechText: "To be continued..." }, // Page 6
     { src: "SCENE 13 - PANEL 1.png", type: "image" },
     { src: "SCENE 13 - PANEL 2.mp4", type: "video" },
     { src: "SCENE 14 - PANEL 1-.mp4", type: "video" },
@@ -360,6 +363,45 @@ function Book() {
               </div>
             </div>
           </div>
+
+          {/* Pages Mapping */}
+          {pages.map((page, index) => (
+            <div key={index} className="page bg-white">
+              {page.type === 'toc' ? (
+                <div className="w-full h-full p-8 flex flex-col bg-white">
+                  <div className="border-b-2 border-black pb-4 mb-8">
+                    <h2 className="text-3xl font-black tracking-tighter uppercase text-center">Table of Contents</h2>
+                  </div>
+                  <div className="space-y-4 flex-1">
+                    {[
+                      { title: "Chapter 1: The Beginning", page: 2 },
+                      { title: "Chapter 2: The Conflict", page: 3 },
+                      { title: "Chapter 3: Resolution", page: 4 },
+                      { title: "Epilogue", page: 5 }
+                    ].map((item, i) => (
+                      <div key={i}
+                        className="flex items-center justify-between p-4 hover:bg-purple-50 rounded-lg cursor-pointer group transition-colors border-b border-gray-100"
+                        onClick={() => bookRef.current?.pageFlip()?.flip(item.page + 1)}>
+                        <span className="font-bold text-lg group-hover:text-purple-700 transition-colors">{item.title}</span>
+                        <span className="text-gray-400 font-mono">0{item.page + 1}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-center text-gray-400 text-sm mt-8">
+                    © 2024 PAGAMBIT
+                  </div>
+                </div>
+              ) : (
+                <MediaPage
+                  src={page.src}
+                  alt={`Page ${index + 1}`}
+                  pageNum={index + 1}
+                  hasSpeechBubble={page.hasSpeechBubble}
+                  speechText={page.speechText}
+                />
+              )}
+            </div>
+          ))}
 
           {/* Back Cover */}
           <div className="page cover bg-gradient-to-br from-indigo-900 via-purple-800 to-violet-900 text-white flex flex-col items-center justify-center p-8 border-l-4 border-purple-950 relative overflow-hidden"
