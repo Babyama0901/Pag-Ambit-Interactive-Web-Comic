@@ -17,7 +17,8 @@ import {
     Printer,
     SkipBack,
     SkipForward,
-    Settings
+    MoreHorizontal,
+    X
 } from 'lucide-react';
 
 const Controls = ({
@@ -40,146 +41,139 @@ const Controls = ({
     onJumpToCover,
     onJumpToEnd
 }) => {
-    const [showSettings, setShowSettings] = useState(false);
-    const progress = Math.round(((currentPage) / totalPages) * 100);
-    const progressWidth = (currentPage / totalPages) * 100;
+    const [showMenu, setShowMenu] = useState(false);
+    const progress = (currentPage / totalPages) * 100;
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 group">
-            {/* Progress Bar */}
-            <div className="relative h-1 bg-gray-800/60 cursor-pointer hover:h-1.5 transition-all">
-                <div
-                    className="absolute top-0 left-0 h-full bg-red-600 transition-all"
-                    style={{ width: `${progressWidth}%` }}
-                >
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-red-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </div>
-            </div>
+        <>
+            {/* Floating Dynamic Island Control Bar */}
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-4 w-full max-w-3xl px-4 pointer-events-none">
 
-            {/* Controls Panel - YouTube Style */}
-            <div className="bg-gradient-to-t from-black/90 via-black/75 to-transparent px-4 py-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="flex items-center justify-between gap-4 max-w-screen-2xl mx-auto">
+                {/* Main Control Pill */}
+                <div className="pointer-events-auto bg-black/40 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-[2.5rem] p-2 flex items-center gap-2 transition-all duration-500 hover:bg-black/50 hover:scale-[1.01] hover:shadow-purple-500/20">
 
-                    {/* Left Controls */}
-                    <div className="flex items-center gap-2">
-                        {/* Navigation */}
-                        <button
+                    {/* Left: Playback/Nav */}
+                    <div className="flex items-center gap-1 pl-2">
+                        <IOSButton
                             onClick={onPrevPage}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                            title="Previous Page (Arrow Left)"
-                        >
-                            <ChevronLeft size={20} />
-                        </button>
+                            icon={ChevronLeft}
+                            label="Previous"
+                            className="w-12 h-12 !rounded-full bg-white/5 hover:bg-white/10"
+                        />
 
-                        <button
+                        <div className="flex flex-col items-center justify-center w-24 px-2">
+                            <span className="text-white font-semibold text-lg leading-none tracking-tight">
+                                {currentPage + 1}
+                            </span>
+                            <span className="text-white/40 text-[10px] font-medium uppercase tracking-widest mt-0.5">
+                                of {totalPages}
+                            </span>
+                        </div>
+
+                        <IOSButton
                             onClick={onNextPage}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                            title="Next Page (Arrow Right)"
-                        >
-                            <ChevronRight size={20} />
-                        </button>
+                            icon={ChevronRight}
+                            label="Next"
+                            className="w-12 h-12 !rounded-full bg-white/5 hover:bg-white/10"
+                        />
+                    </div>
 
-                        {/* Volume */}
-                        <button
+                    <div className="w-px h-8 bg-white/10 mx-2" />
+
+                    {/* Center: Progress Scrubber */}
+                    <div className="flex-1 min-w-[120px] group cursor-pointer relative py-4">
+                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+                            <div
+                                className="h-full bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full transition-all duration-300 group-hover:shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                        {/* Hover Tooltip */}
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md text-white text-xs py-1 px-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10">
+                            {Math.round(progress)}%
+                        </div>
+                    </div>
+
+                    <div className="w-px h-8 bg-white/10 mx-2" />
+
+                    {/* Right: Quick Actions */}
+                    <div className="flex items-center gap-1 pr-1">
+                        <IOSButton
                             onClick={onToggleMute}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                            title={isMuted ? "Unmute" : "Mute"}
-                        >
-                            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-                        </button>
-
-                        {/* Page Counter */}
-                        <div className="text-white text-sm font-medium ml-1">
-                            <span className="tabular-nums">{currentPage + 1}</span>
-                            <span className="text-gray-400 mx-1">/</span>
-                            <span className="text-gray-400 tabular-nums">{totalPages}</span>
-                        </div>
-                    </div>
-
-                    {/* Center - Title/Info */}
-                    <div className="hidden md:flex items-center justify-center flex-1">
-                        <span className="text-white text-sm font-medium">Pagambit - Interactive Comic Book</span>
-                    </div>
-
-                    {/* Right Controls */}
-                    <div className="flex items-center gap-1 relative">
-                        {/* Quick Jump */}
-                        <button
-                            onClick={onJumpToCover}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                            title="Jump to Cover"
-                        >
-                            <SkipBack size={20} />
-                        </button>
-
-                        <button
-                            onClick={onJumpToEnd}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                            title="Jump to End"
-                        >
-                            <SkipForward size={20} />
-                        </button>
-
-                        {/* Settings Menu */}
-                        <div className="relative">
-                            <button
-                                onClick={() => setShowSettings(!showSettings)}
-                                className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                                title="Settings"
-                            >
-                                <Settings size={20} />
-                            </button>
-
-                            {/* Settings Dropdown */}
-                            {showSettings && (
-                                <div className="absolute bottom-full right-0 mb-2 w-56 bg-gray-900/95 backdrop-blur-sm rounded-lg shadow-xl border border-gray-700 py-2 text-sm">
-                                    <SettingsItem icon={Search} label="Search" onClick={() => { onSearch(); setShowSettings(false); }} />
-                                    <SettingsItem icon={List} label="Table of Contents" onClick={() => { onTableOfContents(); setShowSettings(false); }} />
-                                    <div className="border-t border-gray-700 my-1"></div>
-                                    <SettingsItem icon={Bookmark} label="Bookmark Page" onClick={() => { onBookmark(); setShowSettings(false); }} />
-                                    <SettingsItem icon={Printer} label="Print Current Page" onClick={() => { onPrint(); setShowSettings(false); }} />
-                                    <SettingsItem icon={Download} label="Download Book" onClick={() => { onDownload(); setShowSettings(false); }} />
-                                    <SettingsItem icon={Share2} label="Share Link" onClick={() => { onShare(); setShowSettings(false); }} />
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Night Mode */}
-                        <button
-                            onClick={onToggleNightMode}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                            title={isNightMode ? "Day Mode" : "Night Mode"}
-                        >
-                            {isNightMode ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
-
-                        {/* Fullscreen */}
-                        <button
+                            icon={isMuted ? VolumeX : Volume2}
+                            active={isMuted}
+                            label="Mute"
+                        />
+                        <IOSButton
                             onClick={onToggleFullscreen}
-                            className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
-                            title={isFullscreen ? "Exit Fullscreen (f)" : "Fullscreen (f)"}
-                        >
-                            {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
-                        </button>
+                            icon={isFullscreen ? Minimize : Maximize}
+                            active={isFullscreen}
+                            label="Fullscreen"
+                        />
+                        <IOSButton
+                            onClick={() => setShowMenu(!showMenu)}
+                            icon={showMenu ? X : MoreHorizontal}
+                            active={showMenu}
+                            className={`transition-transform duration-300 ${showMenu ? 'rotate-90 bg-white text-black hover:bg-white/90' : ''}`}
+                            label="Menu"
+                        />
                     </div>
                 </div>
 
-                {/* Progress Text */}
-                <div className="absolute top-2 left-4 text-xs text-white/80 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                    {progress}% Complete
+                {/* Expanded Menu (iOS Sheet Style) */}
+                <div className={`
+                    pointer-events-auto w-full max-w-sm bg-black/60 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-4 shadow-2xl transition-all duration-500 origin-bottom
+                    ${showMenu ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95 pointer-events-none absolute bottom-0'}
+                `}>
+                    <div className="grid grid-cols-4 gap-3">
+                        <MenuButton icon={Search} label="Search" onClick={onSearch} />
+                        <MenuButton icon={List} label="Contents" onClick={onTableOfContents} />
+                        <MenuButton icon={Bookmark} label="Bookmark" onClick={onBookmark} />
+                        <MenuButton icon={isNightMode ? Sun : Moon} label={isNightMode ? "Day" : "Night"} onClick={onToggleNightMode} active={isNightMode} />
+
+                        <MenuButton icon={SkipBack} label="Start" onClick={onJumpToCover} />
+                        <MenuButton icon={SkipForward} label="End" onClick={onJumpToEnd} />
+                        <MenuButton icon={Printer} label="Print" onClick={onPrint} />
+                        <MenuButton icon={Download} label="Save" onClick={onDownload} />
+                    </div>
+
+                    <button
+                        onClick={onShare}
+                        className="w-full mt-4 bg-white/10 hover:bg-white/20 active:scale-[0.98] transition-all rounded-xl p-3 flex items-center justify-center gap-2 text-white font-medium"
+                    >
+                        <Share2 size={18} />
+                        <span>Share Book</span>
+                    </button>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
-const SettingsItem = ({ icon: Icon, label, onClick }) => (
+const IOSButton = ({ icon: Icon, onClick, label, active, className = "" }) => (
     <button
         onClick={onClick}
-        className="w-full px-4 py-2 text-white hover:bg-white/10 transition-colors flex items-center gap-3 text-left"
+        className={`
+            relative group p-3 rounded-2xl transition-all duration-300 active:scale-90
+            ${active ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'text-white hover:bg-white/10'}
+            ${className}
+        `}
+        title={label}
     >
-        <Icon size={18} />
-        <span>{label}</span>
+        <Icon size={20} strokeWidth={2} className="transition-transform duration-300 group-hover:scale-110" />
+    </button>
+);
+
+const MenuButton = ({ icon: Icon, label, onClick, active }) => (
+    <button
+        onClick={onClick}
+        className={`
+            flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-300 active:scale-90
+            ${active ? 'bg-indigo-500/20 text-indigo-300 ring-1 ring-indigo-500/50' : 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white'}
+        `}
+    >
+        <Icon size={22} strokeWidth={1.5} />
+        <span className="text-[10px] font-medium tracking-wide">{label}</span>
     </button>
 );
 
