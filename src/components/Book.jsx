@@ -90,31 +90,31 @@ function Book() {
     { src: "Scene1/scene 1.3.png", type: "image", hasSpeechBubble: true, speechText: "Watch out!" },
 
     // Scene 5
-    { src: "Scene 5/5.1.png", type: "image" },
-    { src: "Scene 5/5.2.png", type: "image" },
-    { src: "Scene 5/5.3.png", type: "image" },
-    { src: "Scene 5/5.4.png", type: "image" },
-    { src: "Scene 5/5.5.png", type: "image" },
-    { src: "Scene 5/5.6.png", type: "image" },
+    { src: "Scene5/5.1.png", type: "image" },
+    { src: "Scene5/5.2.png", type: "image" },
+    { src: "Scene5/5.3.png", type: "image" },
+    { src: "Scene5/5.4.png", type: "image" },
+    { src: "Scene5/5.5.png", type: "image" },
+    { src: "Scene5/5.6.png", type: "image" },
 
     // Scene 6
-    { src: "Scene 6/6.1.png", type: "image" },
-    { src: "Scene 6/6.2.png", type: "image" },
-    { src: "Scene 6/6.3.png", type: "image" },
-    { src: "Scene 6/6.4.png", type: "image" },
-    { src: "Scene 6/6.5.png", type: "image" },
-    { src: "Scene 6/6.6.png", type: "image" },
+    { src: "Scene6/6.1.png", type: "image" },
+    { src: "Scene6/6.2.png", type: "image" },
+    { src: "Scene6/6.3.png", type: "image" },
+    { src: "Scene6/6.4.png", type: "image" },
+    { src: "Scene6/6.5.png", type: "image" },
+    { src: "Scene6/6.6.png", type: "image" },
 
     // Scene 7
-    { src: "Scene 7/7.1.png", type: "image" },
-    { src: "Scene 7/7.2.png", type: "image" },
-    { src: "Scene 7/7.3.png", type: "image" },
-    { src: "Scene 7/7.4.png", type: "image" },
+    { src: "Scene7/7.1.png", type: "image" },
+    { src: "Scene7/7.2.png", type: "image" },
+    { src: "Scene7/7.3.png", type: "image" },
+    { src: "Scene7/7.4.png", type: "image" },
 
     // Scene 8
-    { src: "Scene 8/8.1.png", type: "image" },
-    { src: "Scene 8/8.2.png", type: "image" },
-    { src: "Scene 8/8.3.png", type: "image" },
+    { src: "Scene8/8.1.png", type: "image" },
+    { src: "Scene8/8.2.png", type: "image" },
+    { src: "Scene8/8.3.png", type: "image" },
   ];
 
   const totalPages = pages.length + 2; // Cover + Back Cover + Pages
