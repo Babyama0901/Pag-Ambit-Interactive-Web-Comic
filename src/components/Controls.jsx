@@ -37,7 +37,7 @@ const Controls = ({
     const progress = Math.round(((currentPage + 1) / totalPages) * 100);
 
     return (
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-4xl transition-all duration-300">
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 w-auto max-w-3xl transition-all duration-300">
 
             {/* Help Dialog */}
             {showHelp && (
@@ -99,37 +99,34 @@ const Controls = ({
                 </div>
             )}
 
-            {/* Main Control Bar */}
-            <div className="bg-black/70 backdrop-blur-3xl rounded-full border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-3 flex items-center justify-between gap-4 sm:gap-6 transition-all duration-300 hover:bg-black/80 hover:shadow-[0_15px_50px_rgba(0,0,0,0.5)] hover:scale-[1.01]">
+            {/* Main Control Bar - Compact */}
+            <div className="bg-black/80 backdrop-blur-xl rounded-full border border-white/20 shadow-2xl px-5 py-2.5 flex items-center justify-between gap-3 sm:gap-5 transition-all duration-300 hover:bg-black/90 hover:scale-[1.01]">
 
                 {/* Navigation Group */}
-                <div className="flex items-center gap-2 bg-white/5 rounded-full p-1.5 border border-white/5">
+                <div className="flex items-center gap-1 bg-white/10 rounded-full p-1 border border-white/5">
                     <ControlButton onClick={onPrevPage} icon="M15 19l-7-7 7-7" label="Previous" />
-                    <div className="w-px h-6 bg-white/10 mx-1"></div>
+                    <div className="w-px h-5 bg-white/20 mx-1"></div>
                     <ControlButton onClick={onNextPage} icon="M9 5l7 7-7 7" label="Next" />
                 </div>
 
                 {/* Progress Group */}
-                <div className="flex-1 flex flex-col items-center justify-center px-4 min-w-0">
-                    <div className="flex items-center gap-3 mb-1.5 w-full justify-center">
-                        <span className="text-white font-bold text-sm tracking-wide">Page {currentPage + 1}</span>
-                        <span className="text-white/30 text-xs font-medium uppercase tracking-wider">of {totalPages}</span>
+                <div className="flex flex-col items-center justify-center px-2 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                        <span className="text-white font-bold text-xs tracking-wide">Page {currentPage + 1}</span>
+                        <span className="text-white/40 text-[10px] font-medium uppercase tracking-wider">/ {totalPages}</span>
                     </div>
 
-                    <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden relative max-w-[120px] sm:max-w-[160px]">
+                    <div className="w-32 sm:w-48 h-1.5 bg-white/10 rounded-full overflow-hidden relative">
                         <div
-                            className="h-full bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                            className="h-full bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]"
                             style={{ width: `${progress}%` }}
                         />
-                    </div>
-                    <div className="mt-1.5 text-[9px] font-bold text-white/50 tracking-[0.2em] uppercase">
-                        {progress}% Done
                     </div>
                 </div>
 
                 {/* Actions Group */}
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 bg-white/5 rounded-full p-1.5 border border-white/5 hidden sm:flex">
+                <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 bg-white/10 rounded-full p-1 border border-white/5 hidden sm:flex">
                         <ControlButton
                             onClick={onToggleMute}
                             icon={isMuted ? "M5.586 5.586a2 2 0 002.828 0L16 13.172V17l-4.586-4.586-2.828 2.828A2 2 0 015.586 12.414l2.828-2.828-2.828-2.828z M12 8.828L16 4.828V8.828z" : "M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"}
@@ -152,7 +149,7 @@ const Controls = ({
 
                     <button
                         onClick={() => setShowMoreMenu(!showMoreMenu)}
-                        className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${showMoreMenu ? 'bg-white text-black rotate-90 scale-110' : 'bg-white/10 text-white hover:bg-white/20 hover:scale-105 border border-white/10'}`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${showMoreMenu ? 'bg-white text-black rotate-90' : 'bg-white/10 text-white hover:bg-white/20 border border-white/10'}`}
                         title="More Options"
                     >
                         <Icon path="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
@@ -167,10 +164,10 @@ const Controls = ({
 const ControlButton = ({ onClick, icon, label, active = false, className = "" }) => (
     <button
         onClick={onClick}
-        className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 ${active && !className.includes('bg-') ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)] scale-105' : ''} ${!active && !className ? 'text-white hover:bg-white/10 hover:scale-110' : ''} ${className}`}
+        className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${active && !className.includes('bg-') ? 'bg-white text-black shadow-lg scale-105' : ''} ${!active && !className ? 'text-white hover:bg-white/20 hover:scale-110' : ''} ${className}`}
         title={label}
     >
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icon} />
         </svg>
     </button>
