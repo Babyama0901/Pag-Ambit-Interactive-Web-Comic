@@ -3,30 +3,6 @@ import HTMLFlipBook from 'react-pageflip';
 import Controls from './Controls';
 import Modal from './Modal';
 
-// Typewriter Component
-const Typewriter = ({ text, speed = 100, delay = 0 }) => {
-  const [displayText, setDisplayText] = useState('');
-
-  useEffect(() => {
-    let timeout;
-    let currentIndex = 0;
-
-    const startTyping = () => {
-      if (currentIndex < text.length) {
-        setDisplayText(prev => prev + text[currentIndex]);
-        currentIndex++;
-        timeout = setTimeout(startTyping, speed);
-      }
-    };
-
-    timeout = setTimeout(startTyping, delay);
-
-    return () => clearTimeout(timeout);
-  }, [text, speed, delay]);
-
-  return <span>{displayText}</span>;
-};
-
 // MediaPage Component (handles both Images and Videos)
 const MediaPage = ({ src, alt, pageNum, hasSpeechBubble, speechText }) => {
   const [showOverlay, setShowOverlay] = useState(false);
@@ -354,7 +330,7 @@ function Book() {
   };
 
   return (
-    <div ref={containerRef} className={`relative w-full min-h-screen flex flex-col items-center justify-start transition-colors duration-500 ${isNightMode ? 'bg-slate-950/50' : ''} overflow-y-auto pt-24 pb-10`}>
+    <div ref={containerRef} className={`relative w-full h-screen flex flex-col items-center justify-center transition-colors duration-500 ${isNightMode ? 'bg-slate-950/50' : ''} overflow-hidden`}>
 
       {/* Book Container */}
       <div className="relative z-10 flex items-center justify-center">
@@ -402,7 +378,7 @@ function Book() {
                     backgroundSize: '200% auto',
                     animation: 'gradientShift 4s linear infinite, fadeInDown 1.2s ease-out 0.3s both'
                   }}>
-                  <Typewriter text="PAGAMBIT" speed={200} delay={500} />
+                  <span className="tracking-[0.2em]">PAGAMBIT</span>
                 </h1>
               </div>
             </div>
