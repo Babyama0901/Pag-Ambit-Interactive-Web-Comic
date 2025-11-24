@@ -20,9 +20,11 @@ const Controls = ({
     onToggleNightMode,
     onPrint,
     onJumpToCover,
-    onJumpToEnd
+    onJumpToEnd,
+    onJumpToPage
 }) => {
     const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     // Helper for icons
     const Icon = ({ path, className = "w-5 h-5" }) => (
@@ -33,6 +35,49 @@ const Controls = ({
 
     return (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-3xl px-4">
+
+            {/* Help Dialog */}
+            {showHelp && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setShowHelp(false)}>
+                    <div className="bg-white text-black rounded-3xl p-8 max-w-md w-full shadow-2xl relative transform transition-all scale-100" onClick={e => e.stopPropagation()}>
+                        <div className="absolute top-4 right-4">
+                            <button onClick={() => setShowHelp(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <Icon path="M6 18L18 6M6 6l12 12" className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <h2 className="text-3xl font-black mb-2 tracking-tight">How to Read</h2>
+                        <p className="text-gray-500 mb-6">Quick tips for the best experience</p>
+
+                        <ul className="space-y-4">
+                            <li className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl">
+                                <span className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-xl border border-gray-100">👈</span>
+                                <div>
+                                    <p className="font-bold">Flip Pages</p>
+                                    <p className="text-sm text-gray-500">Use arrows or drag page corners</p>
+                                </div>
+                            </li>
+                            <li className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl">
+                                <span className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-xl border border-gray-100">🖱️</span>
+                                <div>
+                                    <p className="font-bold">Quick Jump</p>
+                                    <p className="text-sm text-gray-500">Drag the bottom slider to skip</p>
+                                </div>
+                            </li>
+                            <li className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl">
+                                <span className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-xl border border-gray-100">✨</span>
+                                <div>
+                                    <p className="font-bold">Explore</p>
+                                    <p className="text-sm text-gray-500">Click icons for more tools</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <button onClick={() => setShowHelp(false)} className="mt-8 w-full py-4 bg-black text-white rounded-2xl font-bold hover:bg-gray-800 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                            Got it, let's read!
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* More Menu Popup */}
             {showMoreMenu && (
@@ -81,17 +126,16 @@ const Controls = ({
                             min="0"
                             max={totalPages - 1}
                             value={currentPage}
-                            onChange={(e) => {
-                                // This would need to be handled by parent if we want direct seeking
-                                // For now it's visual mostly, but we can try to hook it up if Book exposes a seek method
-                                // The current props don't seem to have a direct 'onSeek' but we can use onJumpTo... logic if we had it.
-                                // For now, let's just let it be read-only or visual since we can't easily jump to specific page without a prop.
-                                // Actually, we can't easily jump to arbitrary page with current props (only cover/end).
-                                // So we'll keep it read-only for now or just visual.
-                            }}
-                            className="absolute inset-0 w-full opacity-0 cursor-pointer"
-                            disabled
+                            onChange={(e) => onJumpToPage && onJumpToPage(parseInt(e.target.value))}
+                            className={`absolute inset-0 w-full opacity-0 ${onJumpToPage ? 'cursor-pointer' : 'cursor-default'}`}
+                            disabled={!onJumpToPage}
+                            title="Drag to jump to page"
                         />
+
+                        {/* Hover Tooltip for Slider */}
+                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                            Jump to Page
+                        </div>
                     </div>
                 </div>
 
@@ -103,17 +147,25 @@ const Controls = ({
                             icon={isMuted ? "M5.586 5.586a2 2 0 002.828 0L16 13.172V17l-4.586-4.586-2.828 2.828A2 2 0 015.586 12.414l2.828-2.828-2.828-2.828z M12 8.828L16 4.828V8.828z" : "M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"}
                             active={!isMuted}
                             className={isMuted ? "text-white/40" : "text-white"}
+                            label={isMuted ? "Unmute" : "Mute"}
                         />
                         <ControlButton
                             onClick={onToggleFullscreen}
                             icon={isFullscreen ? "M6 18L18 6M6 6l12 12" : "M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"}
                             active={isFullscreen}
+                            label={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                        />
+                        <ControlButton
+                            onClick={() => setShowHelp(true)}
+                            icon="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            label="Help"
                         />
                     </div>
 
                     <button
                         onClick={() => setShowMoreMenu(!showMoreMenu)}
                         className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${showMoreMenu ? 'bg-white text-black rotate-90' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                        title="More Options"
                     >
                         <Icon path="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
                     </button>
@@ -140,6 +192,7 @@ const MenuButton = ({ icon, label, onClick, active }) => (
     <button
         onClick={onClick}
         className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition-all duration-200 ${active ? 'bg-white text-black' : 'hover:bg-white/10 text-white/80 hover:text-white'}`}
+        title={label}
     >
         <div className={`w-10 h-10 rounded-full flex items-center justify-center ${active ? 'bg-black/10' : 'bg-white/10'}`}>
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

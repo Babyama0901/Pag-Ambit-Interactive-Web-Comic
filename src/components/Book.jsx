@@ -3,6 +3,30 @@ import HTMLFlipBook from 'react-pageflip';
 import Controls from './Controls';
 import Modal from './Modal';
 
+// Typewriter Component
+const Typewriter = ({ text, speed = 100, delay = 0 }) => {
+  const [displayText, setDisplayText] = useState('');
+
+  useEffect(() => {
+    let timeout;
+    let currentIndex = 0;
+
+    const startTyping = () => {
+      if (currentIndex < text.length) {
+        setDisplayText(prev => prev + text[currentIndex]);
+        currentIndex++;
+        timeout = setTimeout(startTyping, speed);
+      }
+    };
+
+    timeout = setTimeout(startTyping, delay);
+
+    return () => clearTimeout(timeout);
+  }, [text, speed, delay]);
+
+  return <span>{displayText}</span>;
+};
+
 // MediaPage Component (handles both Images and Videos)
 const MediaPage = ({ src, alt, pageNum, hasSpeechBubble, speechText }) => {
   const [showOverlay, setShowOverlay] = useState(false);
@@ -314,6 +338,13 @@ function Book() {
     setCurrentPage(lastPage);
   };
 
+  const handleJumpToPage = (pageIndex) => {
+    if (pageIndex >= 0 && pageIndex < totalPages) {
+      bookRef.current?.pageFlip()?.flip(pageIndex);
+      setCurrentPage(pageIndex);
+    }
+  };
+
   const handleHighlight = () => {
     alert('✨ Highlighting feature coming soon!');
   };
@@ -371,7 +402,7 @@ function Book() {
                     backgroundSize: '200% auto',
                     animation: 'gradientShift 4s linear infinite, fadeInDown 1.2s ease-out 0.3s both'
                   }}>
-                  PAGAMBIT
+                  <Typewriter text="PAGAMBIT" speed={200} delay={500} />
                 </h1>
               </div>
             </div>
@@ -482,6 +513,7 @@ function Book() {
           onPrint={() => setActiveDialog('print')}
           onJumpToCover={handleJumpToCover}
           onJumpToEnd={handleJumpToEnd}
+          onJumpToPage={handleJumpToPage}
         />
 
         {/* Dialogs */}
