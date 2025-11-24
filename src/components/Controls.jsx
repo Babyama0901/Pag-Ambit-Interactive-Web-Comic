@@ -41,42 +41,77 @@ const Controls = ({
 
             {/* Help Dialog */}
             {showHelp && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-200" onClick={() => setShowHelp(false)}>
-                    <div className="bg-white/90 backdrop-blur-xl text-black rounded-[2rem] p-8 max-w-md w-full shadow-2xl border border-white/20 relative transform transition-all scale-100" onClick={e => e.stopPropagation()}>
-                        <div className="absolute top-4 right-4">
-                            <button onClick={() => setShowHelp(false)} className="p-2 hover:bg-black/5 rounded-full transition-colors">
-                                <Icon path="M6 18L18 6M6 6l12 12" className="w-6 h-6" />
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300" onClick={() => setShowHelp(false)}>
+                    {/* Backdrop with blur */}
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" />
+
+                    {/* Dialog Content */}
+                    <div
+                        className="relative bg-white/90 backdrop-blur-2xl text-slate-900 rounded-[2.5rem] p-8 max-w-lg w-full shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-white/40 overflow-hidden transform transition-all scale-100 animate-in zoom-in-95 duration-300"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Decorative background gradients */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+                        {/* Close Button */}
+                        <div className="absolute top-6 right-6 z-10">
+                            <button
+                                onClick={() => setShowHelp(false)}
+                                className="p-2 hover:bg-black/5 rounded-full transition-colors group"
+                            >
+                                <Icon path="M6 18L18 6M6 6l12 12" className="w-6 h-6 text-slate-400 group-hover:text-slate-600 transition-colors" />
                             </button>
                         </div>
 
-                        <h2 className="text-3xl font-black mb-2 tracking-tight">How to Read</h2>
-                        <p className="text-gray-500 mb-6 font-medium">Quick tips for the best experience</p>
+                        {/* Header */}
+                        <div className="relative z-10 mb-8 text-center">
+                            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-purple-100 to-indigo-100 rounded-2xl flex items-center justify-center mb-4 shadow-inner">
+                                <span className="text-3xl">💡</span>
+                            </div>
+                            <h2 className="text-3xl font-black tracking-tight text-slate-900 mb-2">How to Navigate</h2>
+                            <p className="text-slate-500 font-medium">Master the controls for the best experience</p>
+                        </div>
 
-                        <ul className="space-y-4">
-                            <li className="flex items-center gap-4 p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm">
-                                <span className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-2xl">👈</span>
-                                <div>
-                                    <p className="font-bold text-lg">Flip Pages</p>
-                                    <p className="text-sm text-gray-500">Use arrows or drag page corners</p>
+                        {/* Features List */}
+                        <div className="space-y-4 relative z-10">
+                            <div className="flex items-center gap-5 p-4 bg-white/60 rounded-2xl border border-white/50 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-purple-500/20">
+                                    <Icon path="M15 19l-7-7 7-7" className="w-6 h-6" />
                                 </div>
-                            </li>
-                            <li className="flex items-center gap-4 p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm">
-                                <span className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-2xl">📊</span>
                                 <div>
-                                    <p className="font-bold text-lg">Track Progress</p>
-                                    <p className="text-sm text-gray-500">See your completion status below</p>
+                                    <p className="font-bold text-slate-900 text-lg">Flip Pages</p>
+                                    <p className="text-sm text-slate-500 font-medium">Click arrows, drag corners, or use keys</p>
                                 </div>
-                            </li>
-                            <li className="flex items-center gap-4 p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm">
-                                <span className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-2xl">✨</span>
+                            </div>
+
+                            <div className="flex items-center gap-5 p-4 bg-white/60 rounded-2xl border border-white/50 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-pink-500/20">
+                                    <Icon path="M4 6h16M4 12h16M4 18h16" className="w-6 h-6" />
+                                </div>
                                 <div>
-                                    <p className="font-bold text-lg">Explore</p>
-                                    <p className="text-sm text-gray-500">Click icons for more tools</p>
+                                    <p className="font-bold text-slate-900 text-lg">Menu & Tools</p>
+                                    <p className="text-sm text-slate-500 font-medium">Access TOC, bookmarks, and more</p>
                                 </div>
-                            </li>
-                        </ul>
-                        <button onClick={() => setShowHelp(false)} className="mt-8 w-full py-4 bg-black text-white rounded-2xl font-bold hover:bg-gray-900 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
-                            Got it, let's read!
+                            </div>
+
+                            <div className="flex items-center gap-5 p-4 bg-white/60 rounded-2xl border border-white/50 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
+                                    <Icon path="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <p className="font-bold text-slate-900 text-lg">Interactive</p>
+                                    <p className="text-sm text-slate-500 font-medium">Discover hidden interactions on pages</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action Button */}
+                        <button
+                            onClick={() => setShowHelp(false)}
+                            className="mt-8 w-full py-4 bg-slate-900 text-white rounded-2xl font-bold text-lg hover:bg-slate-800 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-slate-900/20 relative z-10"
+                        >
+                            Start Reading
                         </button>
                     </div>
                 </div>
