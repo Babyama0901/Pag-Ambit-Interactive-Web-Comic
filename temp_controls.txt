@@ -1,0 +1,271 @@
+﻿/* eslint-disable react/prop-types */
+import React, { useState, useEffect, useRef } from 'react';
+import {
+    Volume2, VolumeX, ChevronLeft, ChevronRight, Maximize, Minimize,
+    Bookmark, Download, Share2, Search, List, Moon, Sun, Printer,
+    SkipBack, SkipForward, Settings, X, Highlighter, StickyNote
+} from 'lucide-react';
+
+// --- Helper Components ---
+
+const GlassModal = ({ title, onClose, children }) => (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="w-full max-w-md bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-black/5 dark:border-white/10">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-white">{title}</h3>
+                <button onClick={onClose} className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                    <X size={20} className="text-slate-500 dark:text-slate-400" />
+                </button>
+            </div>
+            <div className="p-6 max-h-[60vh] overflow-y-auto">
+                {children}
+            </div>
+        </div>
+    </div>
+);
+
+const IconButton = ({ icon: Icon, onClick, label, active, variant = 'default' }) => (
+    <button
+        onClick={onClick}
+        className={`p-3 rounded-2xl transition-all duration-200 group relative
+            ${active
+                ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30'
+                : 'hover:bg-white/20 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+            }`}
+        title={label}
+    >
+        <Icon size={22} strokeWidth={2} />
+        {label && <span className="sr-only">{label}</span>}
+    </button>
+);
+
+// --- Main Component ---
+
+const Controls = ({
+    currentPage,
+    totalPages,
+    isMuted,
+    isFullscreen,
+    isNightMode = false,
+    onPrevPage,
+    onNextPage,
+    onToggleMute,
+    onToggleFullscreen,
+    onBookmark,
+    onDownload,
+    onShare,
+    onSearch,
+    onTableOfContents,
+    onToggleNightMode,
+    onPrint,
+    onJumpToCover,
+    onJumpToEnd,
+    onPageChange // New prop for slider
+}) => {
+    const [currentTime, setCurrentTime] = useState(new Date());
+    const [activeModal, setActiveModal] = useState(null); // 'search', 'toc', 'notes', 'settings'
+    const [searchQuery, setSearchQuery] = useState('');
+    const [notes, setNotes] = useState({});
+
+    // Time Update Effect
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    // Load Notes
+    useEffect(() => {
+        const savedNotes = JSON.parse(localStorage.getItem('bookNotes') || '{}');
+        setNotes(savedNotes);
+    }, []);
+
+    const handleSaveNote = (page, text) => {
+        const newNotes = { ...notes, [page]: text };
+        setNotes(newNotes);
+        localStorage.setItem('bookNotes', JSON.stringify(newNotes));
+    };
+
+    const progress = (currentPage / (totalPages - 1)) * 100;
+
+    // --- Modal Contents ---
+
+    const SearchModal = () => (
+        <div className="space-y-4">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input
+                    type="text"
+                    placeholder="Search in book..."
+                    className="w-full pl-10 pr-4 py-3 bg-slate-100 dark:bg-slate-800 rounded-xl border-none focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoFocus
+                />
+            </div>
+            <div className="space-y-2">
+                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Results</p>
+                {/* Mock Results */}
+                {[1, 5, 12].map(page => (
+                    <button key={page} onClick={() => { onPageChange(page); setActiveModal(null); }} className="w-full flex items-center justify-between p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-left group">
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Chapter {page} - The Beginning</span>
+                        <span className="text-xs text-slate-400 group-hover:text-blue-500">Page {page}</span>
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+
+    const TOCModal = () => (
+        <div className="space-y-1">
+            {Array.from({ length: 5 }).map((_, i) => {
+                const pageNum = i * 8;
+                return (
+                    <button key={i} onClick={() => { onPageChange(pageNum); setActiveModal(null); }} className="w-full flex items-center p-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-left gap-4">
+                        <span className="w-8 h-8 flex items-center justify-center bg-slate-200 dark:bg-slate-700 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300">{pageNum + 1}</span>
+                        <div>
+                            <p className="text-sm font-semibold text-slate-800 dark:text-white">Chapter {i + 1}</p>
+                            <p className="text-xs text-slate-500">Description of chapter {i + 1}...</p>
+                        </div>
+                    </button>
+                );
+            })}
+        </div>
+    );
+
+    const NotesModal = () => (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-slate-500">Page {currentPage + 1}</span>
+                <span className="text-xs text-slate-400">{new Date().toLocaleDateString()}</span>
+            </div>
+            <textarea
+                className="w-full h-48 p-4 bg-yellow-50 dark:bg-slate-800 border border-yellow-200 dark:border-slate-700 rounded-xl resize-none focus:ring-2 focus:ring-yellow-400 outline-none transition-all text-slate-700 dark:text-slate-200 leading-relaxed"
+                placeholder="Type your notes here..."
+                value={notes[currentPage] || ''}
+                onChange={(e) => handleSaveNote(currentPage, e.target.value)}
+            />
+            <p className="text-xs text-center text-slate-400">Notes are saved automatically to your browser.</p>
+        </div>
+    );
+
+    return (
+        <>
+            {/* --- Top Bar (Time & Date) --- */}
+            <div className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex justify-between items-start pointer-events-none">
+                <div className="pointer-events-auto bg-white/70 dark:bg-black/60 backdrop-blur-xl border border-white/20 shadow-lg rounded-full px-6 py-2 flex items-center gap-4 transition-all hover:bg-white/90 dark:hover:bg-black/80">
+                    <span className="text-sm font-bold text-slate-800 dark:text-white tabular-nums">
+                        {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                    <div className="w-px h-4 bg-slate-300 dark:bg-slate-600"></div>
+                    <span className="text-xs font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wide">
+                        {currentTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}
+                    </span>
+                </div>
+
+                <div className="pointer-events-auto flex gap-2">
+                    <IconButton icon={isNightMode ? Sun : Moon} onClick={onToggleNightMode} label="Theme" />
+                    <IconButton icon={isFullscreen ? Minimize : Maximize} onClick={onToggleFullscreen} label="Fullscreen" />
+                </div>
+            </div>
+
+            {/* --- Bottom Control Bar --- */}
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl z-50">
+                <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-[2rem] p-4 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.01]">
+
+                    {/* Progress Slider */}
+                    <div className="px-2 flex items-center gap-4">
+                        <span className="text-xs font-medium text-slate-500 w-8 text-right">{currentPage + 1}</span>
+                        <div className="relative flex-1 h-8 flex items-center group cursor-pointer">
+                            {/* Track */}
+                            <div className="absolute inset-x-0 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-blue-500 transition-all duration-150 ease-out"
+                                    style={{ width: `${progress}%` }}
+                                />
+                            </div>
+                            {/* Hover Thumb */}
+                            <div
+                                className="absolute h-4 w-4 bg-white shadow-md rounded-full border-2 border-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                style={{ left: `${progress}%`, transform: 'translateX(-50%)' }}
+                            />
+                            {/* Input Range (Invisible but functional) */}
+                            <input
+                                type="range"
+                                min={0}
+                                max={totalPages - 1}
+                                value={currentPage}
+                                onChange={(e) => onPageChange(Number(e.target.value))}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            />
+                        </div>
+                        <span className="text-xs font-medium text-slate-500 w-8">{totalPages}</span>
+                    </div>
+
+                    {/* Main Controls Grid */}
+                    <div className="flex items-center justify-between px-2">
+
+                        {/* Left: Navigation */}
+                        <div className="flex items-center gap-2 bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl p-1">
+                            <IconButton icon={SkipBack} onClick={onJumpToCover} label="Start" />
+                            <IconButton icon={ChevronLeft} onClick={onPrevPage} label="Prev" />
+                            <IconButton icon={ChevronRight} onClick={onNextPage} label="Next" />
+                            <IconButton icon={SkipForward} onClick={onJumpToEnd} label="End" />
+                        </div>
+
+                        {/* Center: Tools */}
+                        <div className="flex items-center gap-3">
+                            <IconButton icon={Search} onClick={() => setActiveModal('search')} label="Search" active={activeModal === 'search'} />
+                            <IconButton icon={List} onClick={() => setActiveModal('toc')} label="Chapters" active={activeModal === 'toc'} />
+                            <IconButton icon={StickyNote} onClick={() => setActiveModal('notes')} label="Notes" active={activeModal === 'notes'} />
+                            <div className="w-px h-8 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+                            <IconButton icon={Bookmark} onClick={onBookmark} label="Bookmark" />
+                        </div>
+
+                        {/* Right: Actions */}
+                        <div className="flex items-center gap-2">
+                            <IconButton icon={isMuted ? VolumeX : Volume2} onClick={onToggleMute} label="Mute" />
+                            <IconButton icon={Settings} onClick={() => setActiveModal('settings')} label="More" active={activeModal === 'settings'} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* --- Modals --- */}
+            {activeModal === 'search' && (
+                <GlassModal title="Search" onClose={() => setActiveModal(null)}>
+                    <SearchModal />
+                </GlassModal>
+            )}
+            {activeModal === 'toc' && (
+                <GlassModal title="Table of Contents" onClose={() => setActiveModal(null)}>
+                    <TOCModal />
+                </GlassModal>
+            )}
+            {activeModal === 'notes' && (
+                <GlassModal title="Page Notes" onClose={() => setActiveModal(null)}>
+                    <NotesModal />
+                </GlassModal>
+            )}
+            {activeModal === 'settings' && (
+                <GlassModal title="Settings & Actions" onClose={() => setActiveModal(null)}>
+                    <div className="grid grid-cols-2 gap-3">
+                        <button onClick={onPrint} className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors gap-2 group">
+                            <Printer className="text-slate-600 dark:text-slate-300 group-hover:text-blue-500" size={24} />
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Print Page</span>
+                        </button>
+                        <button onClick={onDownload} className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors gap-2 group">
+                            <Download className="text-slate-600 dark:text-slate-300 group-hover:text-blue-500" size={24} />
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Download</span>
+                        </button>
+                        <button onClick={onShare} className="col-span-2 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors gap-3 group">
+                            <Share2 className="text-slate-600 dark:text-slate-300 group-hover:text-blue-500" size={24} />
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Share Book Link</span>
+                        </button>
+                    </div>
+                </GlassModal>
+            )}
+        </>
+    );
+};
+
+export default Controls;
