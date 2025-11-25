@@ -6,7 +6,7 @@ import Modal from './Modal';
 // MediaPage Component (handles both Images and Videos)
 const MediaPage = ({ src, alt, pageNum, hasSpeechBubble, speechText }) => {
   const [showOverlay, setShowOverlay] = useState(false);
-  const isVideo = src.toLowerCase().endsWith('.mp4');
+  const isVideo = src && src.toLowerCase().endsWith('.mp4');
 
   return (
     <div
@@ -78,7 +78,31 @@ const MediaPage = ({ src, alt, pageNum, hasSpeechBubble, speechText }) => {
 
 function Book() {
   const audioRef = useRef(null);
+  const bookRef = useRef(null);
   const [activeDialog, setActiveDialog] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isNightMode, setIsNightMode] = useState(false);
+
+  const pages = [
+    { type: 'toc' },
+    { type: 'blank' },
+    { src: 'Layout/SCENE 1/SCENE 1 - PAGE 1.png', alt: 'Scene 1 Page 1' },
+    { src: 'Layout/SCENE 1/SCENE 1 - PAGE 2.png', alt: 'Scene 1 Page 2' },
+    { src: 'Layout/SCENE 1/SCENE 1 - PAGE 3.png', alt: 'Scene 1 Page 3' },
+    { src: 'Layout/SCENE 2/SCENE 2 - PAGE 1.png', alt: 'Scene 2 Page 1' },
+    { src: 'Layout/SCENE 2/SCENE 2 - PAGE 2.png', alt: 'Scene 2 Page 2' },
+    { src: 'Layout/SCENE 2/SCENE 2 - PAGE 3.png', alt: 'Scene 2 Page 3' },
+    { src: 'Layout/SCENE 2/SCENE 2 - PAGE 4.png', alt: 'Scene 2 Page 4' },
+    { src: 'Layout/SCENE 2/SCENE 2 - PAGE 5.png', alt: 'Scene 2 Page 5' },
+    { src: 'Layout/SCENE 2/SCENE 2 - PAGE 6.png', alt: 'Scene 2 Page 6' },
+  ];
+
+  useEffect(() => {
+    setTotalPages(pages.length + 2);
+  }, []);
 
   // Audio unlock logic
   useEffect(() => {
@@ -401,7 +425,7 @@ function Book() {
                 </div>
               ) : (
                 <MediaPage
-                  src={`${import.meta.env.BASE_URL}${page.src}`}
+                  src={`${import.meta.env.BASE_URL}${page.src || ''}`}
                   alt={`Page ${index + 1}`}
                   pageNum={index + 1}
                   hasSpeechBubble={page.hasSpeechBubble}
