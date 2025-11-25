@@ -4,7 +4,7 @@ import Controls from './Controls';
 import Modal from './Modal';
 
 // MediaPage Component (handles both Images and Videos)
-const MediaPage = ({ src, alt, pageNum, hasSpeechBubble, speechText }) => {
+const MediaPage = ({ src, alt, pageNum, speechBubbleSrc }) => {
   const [showOverlay, setShowOverlay] = useState(false);
   const isVideo = src && src.toLowerCase().endsWith('.mp4');
 
@@ -28,48 +28,22 @@ const MediaPage = ({ src, alt, pageNum, hasSpeechBubble, speechText }) => {
           src={src}
           alt={alt}
           className="w-full h-full object-contain shadow-sm"
-          
+
           onError={(e) => { e.target.src = 'https://placehold.co/450x636/e9d5ff/6b21a8?text=Page+' + pageNum }}
         />
       )}
 
       {/* Speech Bubble Overlay - Only show for images or if requested */}
-      {!isVideo && hasSpeechBubble && (
+      {!isVideo && speechBubbleSrc && (
         <div
-          className={`absolute inset-0 flex items-center justify-center pointer-events-none`}
+          className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-500 ease-in-out
+            ${showOverlay ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
         >
-          <div className={`relative bg-white border-4 border-black rounded-[50%] p-8 w-64 h-48 flex flex-col items-center justify-center shadow-[8px_8px_0px_rgba(0,0,0,0.2)]
-                          transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] origin-bottom-left
-                          ${showOverlay ? 'opacity-100 scale-100 translate-y-0 rotate-0' : 'opacity-0 scale-0 translate-y-20 -rotate-12'}`}
-            style={{
-              borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%' // Organic speech bubble shape
-            }}
-          >
-            {/* Bubble Tail */}
-            <div className="absolute -bottom-6 left-10 w-0 h-0 
-                            border-l-[20px] border-l-transparent
-                            border-r-[0px] border-r-transparent
-                            border-t-[40px] border-t-black
-                            transform -rotate-12">
-            </div>
-            <div className="absolute -bottom-[18px] left-[44px] w-0 h-0 
-                            border-l-[16px] border-l-transparent
-                            border-r-[0px] border-r-transparent
-                            border-t-[32px] border-t-white
-                            transform -rotate-12">
-            </div>
-
-            {/* Content */}
-            <div className="text-center z-10">
-              <h3 className="font-black text-2xl mb-2 tracking-tighter transform -rotate-2">
-                {speechText || "OPEN OVERLAY!"}
-              </h3>
-            </div>
-
-            {/* Decorative lines */}
-            <div className="absolute top-4 right-6 w-4 h-1 bg-black rounded-full transform rotate-12 opacity-20"></div>
-            <div className="absolute bottom-6 left-6 w-2 h-2 bg-black rounded-full opacity-20"></div>
-          </div>
+          <img
+            src={`${import.meta.env.BASE_URL}${speechBubbleSrc}`}
+            alt="Dialogue"
+            className="w-full h-full object-contain"
+          />
         </div>
       )}
     </div>
@@ -92,35 +66,35 @@ function Book() {
     { src: 'Layout/SCENE 1 - PAGE 1.png', alt: 'Scene 1 Page 1' },
     { src: 'Layout/SCENE 1 - PAGE 2.png', alt: 'Scene 1 Page 2' },
     { src: 'Layout/SCENE 1 - PAGE 3.png', alt: 'Scene 1 Page 3' },
-    { src: 'Layout/SCENE 2 - PAGE 4.png', alt: 'Scene 2 Page 4' },
+    { src: 'Layout/SCENE 2 - PAGE 4.png', alt: 'Scene 2 Page 4', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 4 - DIALOGUE.png' },
     { src: 'Layout/SCENE 2 - PAGE 5.png', alt: 'Scene 2 Page 5' },
-    { src: 'Layout/SCENE 2 - PAGE 6.png', alt: 'Scene 2 Page 6' },
-    { src: 'Layout/SCENE 2 - PAGE 7.png', alt: 'Scene 2 Page 7' },
-    { src: 'Layout/SCENE 2 - PAGE 8.png', alt: 'Scene 2 Page 8' },
-    { src: 'Layout/SCENE 3 - PAGE 9.png', alt: 'Scene 3 Page 9' },
+    { src: 'Layout/SCENE 2 - PAGE 6.png', alt: 'Scene 2 Page 6', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 6 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 2 - PAGE 7.png', alt: 'Scene 2 Page 7', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 7 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 2 - PAGE 8.png', alt: 'Scene 2 Page 8', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 8 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 3 - PAGE 9.png', alt: 'Scene 3 Page 9', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 3 - PAGE 9 - DIALOGUE.png' },
     { src: 'Layout/SCENE 3 - PAGE 10.png', alt: 'Scene 3 Page 10' },
     { src: 'Layout/SCENE 3 - PAGE 11.png', alt: 'Scene 3 Page 11' },
     { src: 'Layout/SCENE 3 - PAGE 12.png', alt: 'Scene 3 Page 12' },
-    { src: 'Layout/SCENE 4 - PAGE 13.png', alt: 'Scene 4 Page 13' },
+    { src: 'Layout/SCENE 4 - PAGE 13.png', alt: 'Scene 4 Page 13', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 4 - PAGE 13 - DIALOGUE.png' },
     { src: 'Layout/SCENE 4 - PAGE 14.png', alt: 'Scene 4 Page 14' },
     { src: 'Layout/SCENE 4 - PAGE 15.png', alt: 'Scene 4 Page 15' },
     { src: 'Layout/SCENE 4 - PAGE 16.png', alt: 'Scene 4 Page 16' },
     { src: 'Layout/SCENE 5 - PAGE 17.png', alt: 'Scene 5 Page 17' },
-    { src: 'Layout/SCENE 5 - PAGE 18.png', alt: 'Scene 5 Page 18' },
+    { src: 'Layout/SCENE 5 - PAGE 18.png', alt: 'Scene 5 Page 18', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 5 - PAGE 18 - DIALOGUE.png' },
     { src: 'Layout/SCENE 5 - PAGE 19.png', alt: 'Scene 5 Page 19' },
     { src: 'Layout/SCENE 5 - PAGE 20.png', alt: 'Scene 5 Page 20' },
     { src: 'Layout/SCENE 5 - PAGE 21.png', alt: 'Scene 5 Page 21' },
-    { src: 'Layout/SCENE 6 - PAGE 22.png', alt: 'Scene 6 Page 22' },
-    { src: 'Layout/SCENE 6 - PAGE 23.png', alt: 'Scene 6 Page 23' },
-    { src: 'Layout/SCENE 7 - PAGE 24.png', alt: 'Scene 7 Page 24' },
+    { src: 'Layout/SCENE 6 - PAGE 22.png', alt: 'Scene 6 Page 22', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 6 - PAGE 22 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 6 - PAGE 23.png', alt: 'Scene 6 Page 23', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 6 - PAGE 23 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 7 - PAGE 24.png', alt: 'Scene 7 Page 24', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 7 - PAGE 24 - DIALOGUE.png' },
     { src: 'Layout/SCENE 7 - PAGE 25.png', alt: 'Scene 7 Page 25' },
-    { src: 'Layout/SCENE 8 - PAGE 26.png', alt: 'Scene 8 Page 26' },
-    { src: 'Layout/SCENE 8 - PAGE 27.png', alt: 'Scene 8 Page 27' },
-    { src: 'Layout/SCENE 9 - PAGE 28.png', alt: 'Scene 9 Page 28' },
+    { src: 'Layout/SCENE 8 - PAGE 26.png', alt: 'Scene 8 Page 26', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 8 - PAGE 26 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 8 - PAGE 27.png', alt: 'Scene 8 Page 27', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 8 - PAGE 27 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 9 - PAGE 28.png', alt: 'Scene 9 Page 28', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 9 - PAGE 28 - DIALOGUE.png' },
     { src: 'Layout/SCENE 9 - PAGE 29.png', alt: 'Scene 9 Page 29' },
     { src: 'Layout/SCENE 10 - PAGE 30.png', alt: 'Scene 10 Page 30' },
-    { src: 'Layout/SCENE 11 - PAGE 31.png', alt: 'Scene 11 Page 31' },
-    { src: 'Layout/SCENE 11 - PAGE 32.png', alt: 'Scene 11 Page 32' },
+    { src: 'Layout/SCENE 11 - PAGE 31.png', alt: 'Scene 11 Page 31', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 11 - PAGE 31 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 11 - PAGE 32.png', alt: 'Scene 11 Page 32', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 11 - PAGE 32 - DIALOGUE.png' },
     { src: 'Layout/SCENE 11 - PAGE 33.png', alt: 'Scene 11 Page 33' },
   ];
 
@@ -456,8 +430,7 @@ function Book() {
                   src={`${import.meta.env.BASE_URL}${page.src || ''}`}
                   alt={`Page ${index + 1}`}
                   pageNum={index + 1}
-                  hasSpeechBubble={page.hasSpeechBubble}
-                  speechText={page.speechText}
+                  speechBubbleSrc={page.speechBubbleSrc}
                 />
               )}
             </div>
