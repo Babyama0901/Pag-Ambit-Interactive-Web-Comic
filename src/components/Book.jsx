@@ -299,23 +299,7 @@ function Book() {
 
   const handleJumpToPage = (pageIndex) => {
     if (pageIndex >= 0 && pageIndex < totalPages) {
-      bookRef.current?.pageFlip()?.flip(pageIndex);
-      setCurrentPage(pageIndex);
-    }
-  };
-
-  const handleHighlight = () => {
-    alert('✨ Highlighting feature coming soon!');
-  };
-
-  const handleNotes = () => {
-    alert('📝 Notes feature coming soon!');
-  };
-
-  return (
-    <div ref={containerRef} className={`relative w-full h-screen flex flex-col items-center justify-center transition-colors duration-500 ${isNightMode ? 'bg-slate-950/50' : ''} overflow-hidden`}>
-
-      {/* Book Container */}
+      {/* Book Container */ }
       <div className="relative z-10 flex items-center justify-center">
         <HTMLFlipBook
           width={450}
