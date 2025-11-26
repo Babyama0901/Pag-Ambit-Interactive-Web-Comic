@@ -248,29 +248,6 @@ function Book() {
   };
 
   const handleBookmark = () => setActiveDialog('bookmarks');
-  const handleDownload = () => setActiveDialog('save');
-  const handleShare = () => setActiveDialog('share');
-  const handleTableOfContents = () => setActiveDialog('contents');
-  const handlePrint = () => setActiveDialog('print');
-
-  const handleHighlight = () => {
-    alert('Highlight feature coming soon!');
-  };
-
-  const handleNotes = () => {
-    alert('Notes feature coming soon!');
-  };
-
-  const handleSearch = () => {
-    const query = prompt('🔍 Search the book:');
-    if (query) {
-      alert(`Searching for "${query}"...\nThis feature will be fully implemented soon!`);
-    }
-  };
-
-  const toggleNightMode = () => {
-    setIsNightMode(!isNightMode);
-  };
 
   const handleJumpToCover = () => {
     bookRef.current?.pageFlip()?.flip(0);
