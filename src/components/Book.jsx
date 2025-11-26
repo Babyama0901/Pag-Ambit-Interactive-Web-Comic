@@ -555,6 +555,84 @@ function Book() {
         </div>
       </Modal>
 
+      <Modal
+        isOpen={activeDialog === 'notes'}
+        onClose={() => setActiveDialog(null)}
+        title="Take Notes"
+      >
+        <div className="space-y-3">
+          <a href="https://keep.google.com/" target="_blank" rel="noopener noreferrer" className="block w-full p-4 rounded-xl bg-[#FFB900]/10 hover:bg-[#FFB900]/20 border border-[#FFB900]/20 flex items-center gap-4 group transition-all">
+            <div className="w-10 h-10 rounded-full bg-[#FFB900]/20 flex items-center justify-center text-[#FFB900] font-bold">
+              G
+            </div>
+            <div className="text-left">
+              <div className="text-white font-medium">Google Keep</div>
+              <div className="text-white/40 text-xs">Quick notes</div>
+            </div>
+          </a>
+          <a href="https://www.icloud.com/notes" target="_blank" rel="noopener noreferrer" className="block w-full p-4 rounded-xl bg-[#F7CE46]/10 hover:bg-[#F7CE46]/20 border border-[#F7CE46]/20 flex items-center gap-4 group transition-all">
+            <div className="w-10 h-10 rounded-full bg-[#F7CE46]/20 flex items-center justify-center text-[#F7CE46] font-bold">
+              A
+            </div>
+            <div className="text-left">
+              <div className="text-white font-medium">Apple Notes</div>
+              <div className="text-white/40 text-xs">iCloud Sync</div>
+            </div>
+          </a>
+          <a href="https://www.notion.so/" target="_blank" rel="noopener noreferrer" className="block w-full p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center gap-4 group transition-all">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-bold">
+              N
+            </div>
+            <div className="text-left">
+              <div className="text-white font-medium">Notion</div>
+              <div className="text-white/40 text-xs">Organized workspace</div>
+            </div>
+          </a>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={activeDialog === 'search'}
+        onClose={() => setActiveDialog(null)}
+        title="Search Book"
+      >
+        <div className="space-y-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Type to search..."
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-4 pl-12 text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 transition-all"
+              autoFocus
+            />
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30">
+              🔍
+            </div>
+          </div>
+          <div className="text-center text-white/30 text-sm py-4">
+            No results found
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={activeDialog === 'highlight'}
+        onClose={() => setActiveDialog(null)}
+        title="Highlight"
+      >
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 mx-auto bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-500 text-2xl">
+            🖍️
+          </div>
+          <p className="text-white/70">Select text on the page to highlight it.</p>
+          <div className="flex gap-2 justify-center">
+            <div className="w-8 h-8 rounded-full bg-yellow-400 cursor-pointer ring-2 ring-white/20 hover:scale-110 transition-transform shadow-lg shadow-yellow-400/20"></div>
+            <div className="w-8 h-8 rounded-full bg-green-400 cursor-pointer ring-2 ring-white/20 hover:scale-110 transition-transform shadow-lg shadow-green-400/20"></div>
+            <div className="w-8 h-8 rounded-full bg-pink-400 cursor-pointer ring-2 ring-white/20 hover:scale-110 transition-transform shadow-lg shadow-pink-400/20"></div>
+            <div className="w-8 h-8 rounded-full bg-blue-400 cursor-pointer ring-2 ring-white/20 hover:scale-110 transition-transform shadow-lg shadow-blue-400/20"></div>
+          </div>
+        </div>
+      </Modal>
+
       {/* Hidden Audio Element */}
       <audio ref={audioRef} src={`${import.meta.env.BASE_URL}Page Turn Sound Effect.mp3`} preload="auto" />
     </div>
