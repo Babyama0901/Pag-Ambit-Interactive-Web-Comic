@@ -127,66 +127,32 @@ function Book() {
     const updateDimensions = () => {
       if (containerRef.current) {
         const { clientWidth, clientHeight } = containerRef.current;
-        // Calculate dimensions maintaining aspect ratio or fitting container
-        // For mobile (single page view usually preferred but library handles 2-page spread)
-        // We'll try to fit within the container with some padding
-
         let newWidth = clientWidth;
         let newHeight = clientHeight;
 
-        // Max dimensions constraint
         const maxWidth = 1000;
         const maxHeight = 800;
-
-        // Aspect ratio target (e.g., 2:3 per page, so 4:3 for spread)
-        // Let's just maximize available space while keeping reasonable limits
-
         const isMobile = window.innerWidth < 768;
 
         if (isMobile) {
-          // On mobile, we might want a single page view or just smaller double page
-          // For now, let's scale the double page view to fit width
-          newWidth = Math.min(clientWidth - 20, 500); // Padding
-          newHeight = (newWidth * 1.5); // 2:3 aspect ratio roughly per page? No, spread is wider.
-          // If spread is 2 pages. 
-          // If we assume standard book ratio.
-          // Let's stick to the library's responsive features if possible, but 'stretch' mode is often easier.
-          // However, 'stretch' mode in react-pageflip can be tricky. 
-          // Let's try explicit dimension calculation first for control.
-
-          // Actually, let's try to make it responsive by setting width/height based on container
-          // But we need to be careful about the aspect ratio.
-
-          // Let's set a base size and let CSS transform handle the scaling if needed, 
-          // OR pass dynamic props.
-
-          // Simpler approach: Use 'stretch' size type if it works well, otherwise calc.
-          // The plan mentioned 'stretch'. Let's try calculating to be safe as 'stretch' can distort.
+          newWidth = Math.min(clientWidth - 20, 500);
+          newHeight = (newWidth * 1.5);
 
           const availableWidth = Math.min(clientWidth, maxWidth);
           const availableHeight = Math.min(clientHeight, maxHeight);
-
-          // Target aspect ratio for SPREAD (2 pages)
-          // Page is 300-500w, 400-700h. 
-          // Let's say single page is 1:1.5 (e.g. 400x600). Spread is 2:1.5 (800x600) = 4:3.
-
           const targetRatio = 4 / 3;
           const containerRatio = availableWidth / availableHeight;
 
           if (containerRatio > targetRatio) {
-            // Container is wider than book
             newHeight = availableHeight * 0.9;
             newWidth = newHeight * targetRatio;
           } else {
-            // Container is taller than book
             newWidth = availableWidth * 0.95;
             newHeight = newWidth / targetRatio;
           }
         } else {
-          // Desktop logic similar but larger bounds
           const availableWidth = Math.min(clientWidth, 1200);
           const availableHeight = Math.min(clientHeight, 900);
-
           const targetRatio = 4 / 3;
           const containerRatio = availableWidth / availableHeight;
 
@@ -199,7 +165,7 @@ function Book() {
           }
         }
 
-        setDimensions({ width: Math.floor(newWidth / 2), height: Math.floor(newHeight) }); // Width is per page
+        setDimensions({ width: Math.floor(newWidth / 2), height: Math.floor(newHeight) });
       }
     };
 
@@ -267,6 +233,15 @@ function Book() {
     }
   };
 
+  const handleNotes = () => setActiveDialog('notes');
+  const handleHighlight = () => setActiveDialog('highlight');
+  const handleSearch = () => setActiveDialog('search');
+  const handleDownload = () => setActiveDialog('save');
+  const handleShare = () => setActiveDialog('share');
+  const handleTableOfContents = () => setActiveDialog('contents');
+  const toggleNightMode = () => setIsNightMode(!isNightMode);
+  const handlePrint = () => setActiveDialog('print');
+
   return (
     <div className="relative z-10 flex items-center justify-center">
       <HTMLFlipBook
@@ -307,14 +282,12 @@ function Book() {
             backgroundSize: '200% 200%',
             animation: 'gradientShift 8s ease infinite reverse'
           }}>
-          {/* Animated background overlay */}
           <div className="absolute inset-0 opacity-30" style={{
             background: 'radial-gradient(circle at 70% 50%, rgba(244, 218, 174, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 50%, rgba(245, 184, 15, 0.4) 0%, transparent 50%)',
             animation: 'float 6s ease-in-out infinite reverse'
           }}></div>
 
           <div className="text-center space-y-6 relative z-10">
-            {/* Animated icon with floating and glow */}
             <div className="w-24 h-24 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner"
               style={{
                 animation: 'float 4s ease-in-out infinite, pulseGlow 3s ease-in-out infinite'
@@ -322,7 +295,6 @@ function Book() {
               <span className="text-3xl" style={{ animation: 'scaleIn 1s ease-out' }}>🏁</span>
             </div>
 
-            {/* Animated title */}
             <div style={{ animation: 'fadeInDown 1.2s ease-out 0.3s both' }}>
               <h1 className="text-3xl font-black tracking-tighter mb-2 font-serif bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
                 style={{
@@ -336,7 +308,6 @@ function Book() {
               </p>
             </div>
 
-            {/* Animated footer */}
             <div className="pt-8" style={{ animation: 'fadeInUp 1.2s ease-out 0.7s both' }}>
               <p className="text-[10px] text-purple-300/60">© 2024 Mel Creatives</p>
             </div>
@@ -529,6 +500,104 @@ function Book() {
               <div className="text-white/40 text-xs">PNG Image</div>
             </div>
           </button>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={activeDialog === 'notes'}
+        onClose={() => setActiveDialog(null)}
+        title="Notes"
+      >
+        <div className="space-y-4">
+          <p className="text-white/70 text-sm mb-4">Choose where to take your notes:</p>
+
+          <a
+            href="https://keep.google.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center gap-4 group transition-all"
+          >
+            <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400 text-2xl">
+              📝
+            </div>
+            <div className="text-left flex-1">
+              <div className="text-white font-medium">Google Keep</div>
+              <div className="text-white/40 text-xs">Quick and simple note-taking</div>
+            </div>
+            <svg className="w-5 h-5 text-white/40 group-hover:text-white/60 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+
+          <a
+            href="https://www.icloud.com/notes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center gap-4 group transition-all"
+          >
+            <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 text-2xl">
+              🍎
+            </div>
+            <div className="text-left flex-1">
+              <div className="text-white font-medium">Apple Notes</div>
+              <div className="text-white/40 text-xs">iOS/macOS native notes app</div>
+            </div>
+            <svg className="w-5 h-5 text-white/40 group-hover:text-white/60 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+
+          <a
+            href="https://www.notion.so/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center gap-4 group transition-all"
+          >
+            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white text-2xl">
+              ⚡
+            </div>
+            <div className="text-left flex-1">
+              <div className="text-white font-medium">Notion</div>
+              <div className="text-white/40 text-xs">All-in-one workspace</div>
+            </div>
+            <svg className="w-5 h-5 text-white/40 group-hover:text-white/60 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={activeDialog === 'highlight'}
+        onClose={() => setActiveDialog(null)}
+        title="Highlight"
+      >
+        <div className="text-center space-y-4">
+          <div className="w-20 h-20 mx-auto bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400 text-4xl">
+            🖍️
+          </div>
+          <p className="text-white/70">Highlighting feature coming soon!</p>
+          <p className="text-white/50 text-sm">You'll be able to highlight important text and save your highlights.</p>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={activeDialog === 'search'}
+        onClose={() => setActiveDialog(null)}
+        title="Search"
+      >
+        <div className="space-y-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search in book..."
+              className="w-full p-4 pl-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+            />
+            <svg className="w-5 h-5 text-white/40 absolute left-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <p className="text-white/50 text-sm text-center">Search functionality coming soon!</p>
         </div>
       </Modal>
 
