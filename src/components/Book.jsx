@@ -309,7 +309,7 @@ function Book() {
           }}>
           {/* Animated background overlay */}
           <div className="absolute inset-0 opacity-30" style={{
-            background: 'radial-gradient(circle at 70% 50%, rgba(99, 102, 241, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 50%, rgba(168, 85, 247, 0.4) 0%, transparent 50%)',
+            background: 'radial-gradient(circle at 70% 50%, rgba(244, 218, 174, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 50%, rgba(245, 184, 15, 0.4) 0%, transparent 50%)',
             animation: 'float 6s ease-in-out infinite reverse'
           }}></div>
 
