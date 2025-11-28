@@ -64,6 +64,7 @@ function Book() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isNightMode, setIsNightMode] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(100);
 
   const pages = [
     { src: 'Layout/FRONT BOOK COVER.png', alt: 'Front Cover' },
