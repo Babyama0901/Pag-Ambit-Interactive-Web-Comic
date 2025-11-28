@@ -58,6 +58,75 @@ function Book() {
   const audioRef = useRef(null);
   const bookRef = useRef(null);
   const [activeDialog, setActiveDialog] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isNightMode, setIsNightMode] = useState(false);
+
+  const pages = [
+    { src: 'Layout/FRONT BOOK COVER.png', alt: 'FRONT BOOK COVER' },
+    { src: 'Layout/SCENE 1 - PAGE 1.png', alt: 'SCENE 1 - PAGE 1' },
+    { src: 'Layout/SCENE 1 - PAGE 2.png', alt: 'SCENE 1 - PAGE 2' },
+    { src: 'Layout/SCENE 1 - PAGE 3.png', alt: 'SCENE 1 - PAGE 3' },
+    { src: 'Layout/SCENE 2 - PAGE 4.png', alt: 'SCENE 2 - PAGE 4', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 4 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 2 - PAGE 5.png', alt: 'SCENE 2 - PAGE 5' },
+    { src: 'Layout/SCENE 2 - PAGE 6.png', alt: 'SCENE 2 - PAGE 6', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 6 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 2 - PAGE 7.png', alt: 'SCENE 2 - PAGE 7', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 7 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 2 - PAGE 8.png', alt: 'SCENE 2 - PAGE 8', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 2 - PAGE 8 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 3 - PAGE 9.png', alt: 'SCENE 3 - PAGE 9', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 3 - PAGE 9 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 3 - PAGE 10.png', alt: 'SCENE 3 - PAGE 10' },
+    { src: 'Layout/SCENE 3 - PAGE 11.png', alt: 'SCENE 3 - PAGE 11' },
+    { src: 'Layout/SCENE 3 - PAGE 12.png', alt: 'SCENE 3 - PAGE 12' },
+    { src: 'Layout/SCENE 4 - PAGE 13.png', alt: 'SCENE 4 - PAGE 13', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 4 - PAGE 13 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 4 - PAGE 14.png', alt: 'SCENE 4 - PAGE 14' },
+    { src: 'Layout/SCENE 4 - PAGE 15.png', alt: 'SCENE 4 - PAGE 15' },
+    { src: 'Layout/SCENE 4 - PAGE 16.png', alt: 'SCENE 4 - PAGE 16' },
+    { src: 'Layout/SCENE 5 - PAGE 17.png', alt: 'SCENE 5 - PAGE 17' },
+    { src: 'Layout/SCENE 5 - PAGE 18.png', alt: 'SCENE 5 - PAGE 18' },
+    { src: 'Layout/SCENE 5 - PAGE 19.png', alt: 'SCENE 5 - PAGE 19', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 5 - PAGE 19 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 5 - PAGE 20.png', alt: 'SCENE 5 - PAGE 20' },
+    { src: 'Layout/SCENE 5 - PAGE 21.png', alt: 'SCENE 5 - PAGE 21' },
+    { src: 'Layout/SCENE 5 - PAGE 22.png', alt: 'SCENE 5 - PAGE 22' },
+    { src: 'Layout/SCENE 6 - PAGE 23.png', alt: 'SCENE 6 - PAGE 23', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 6 - PAGE 23 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 6 - PAGE 24.png', alt: 'SCENE 6 - PAGE 24', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 6 - PAGE 24 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 7 - PAGE 25.png', alt: 'SCENE 7 - PAGE 25', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 7 - PAGE 25 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 7 - PAGE 26.png', alt: 'SCENE 7 - PAGE 26' },
+    { src: 'Layout/SCENE 8 - PAGE 27.png', alt: 'SCENE 8 - PAGE 27', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 8 - PAGE 27 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 8 - PAGE 28.png', alt: 'SCENE 8 - PAGE 28', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 8 - PAGE 28 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 9 - PAGE 29.png', alt: 'SCENE 9 - PAGE 29' },
+    { src: 'Layout/SCENE 9 - PAGE 30.png', alt: 'SCENE 9 - PAGE 30' },
+    { src: 'Layout/SCENE 10 - PAGE 31.png', alt: 'SCENE 10 - PAGE 31' },
+    { src: 'Layout/SCENE 11 - PAGE 32.png', alt: 'SCENE 11 - PAGE 32', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 11 - PAGE 32 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 11 - PAGE 33.png', alt: 'SCENE 11 - PAGE 33', speechBubbleSrc: 'Speech Bubbles Dialogues/SCENE 11 - PAGE 33 - DIALOGUE.png' },
+    { src: 'Layout/SCENE 11 - PAGE 34.png', alt: 'SCENE 11 - PAGE 34' },
+    { src: 'Layout/SCENE 12 - PAGE 35.png', alt: 'SCENE 12 - PAGE 35' },
+    { src: 'Layout/SCENE 12 - PAGE 36.png', alt: 'SCENE 12 - PAGE 36' },
+    { src: 'Layout/SCENE 12 - PAGE 37.png', alt: 'SCENE 12 - PAGE 37' },
+    { src: 'Layout/SCENE 13 - PAGE 38.png', alt: 'SCENE 13 - PAGE 38' },
+    { src: 'Layout/SCENE 13 - PAGE 39.png', alt: 'SCENE 13 - PAGE 39' },
+    { src: 'Layout/SCENE 14 - PAGE 40.png', alt: 'SCENE 14 - PAGE 40' },
+    { src: 'Layout/SCENE 14 - PAGE 41.png', alt: 'SCENE 14 - PAGE 41' },
+    { src: 'Layout/SCENE 14 - PAGE 42.png', alt: 'SCENE 14 - PAGE 42' },
+    { src: 'Layout/SCENE 15 - PAGE 43.png', alt: 'SCENE 15 - PAGE 43' },
+    { src: 'Layout/SCENE 15 - PAGE 44.png', alt: 'SCENE 15 - PAGE 44' },
+    { src: 'Layout/SCENE 16 - PAGE 45.png', alt: 'SCENE 16 - PAGE 45' },
+    { src: 'Layout/SCENE 16 - PAGE 46.png', alt: 'SCENE 16 - PAGE 46' },
+    { src: 'Layout/SCENE 17 - PAGE 47.png', alt: 'SCENE 17 - PAGE 47' },
+    { src: 'Layout/SCENE 17 - PAGE 48.png', alt: 'SCENE 17 - PAGE 48' },
+    { src: 'Layout/SCENE 18 - PAGE 49.png', alt: 'SCENE 18 - PAGE 49' },
+    { src: 'Layout/SCENE 18 - PAGE 50.png', alt: 'SCENE 18 - PAGE 50' },
+    { src: 'Layout/SCENE 18 - PAGE 51.png', alt: 'SCENE 18 - PAGE 51' },
+    { src: 'Layout/SCENE 19 - PAGE 52.png', alt: 'SCENE 19 - PAGE 52' },
+    { src: 'Layout/SCENE 20 - PAGE 53.png', alt: 'SCENE 20 - PAGE 53' },
+    { src: 'Layout/SCENE 20 - PAGE 54.png', alt: 'SCENE 20 - PAGE 54' },
+    { src: 'Layout/SCENE 20 - PAGE 55.png', alt: 'SCENE 20 - PAGE 55' },
+    { src: 'Layout/BACK BOOK COVER.png', alt: 'BACK BOOK COVER' },
+  ];
+
+  useEffect(() => {
+    setTotalPages(pages.length);
+  }, []);
 
   // Audio unlock logic
   useEffect(() => {
