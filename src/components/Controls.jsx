@@ -22,8 +22,10 @@ const Controls = ({
     onJumpToCover,
     onJumpToEnd,
     onJumpToPage,
-    zoomLevel,
-    onZoomChange
+    zoom,
+    onZoomChange,
+    onZoomIn,
+    onZoomOut
 }) => {
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
@@ -164,15 +166,18 @@ const Controls = ({
 
                     {/* Zoom Slider */}
                     <div className="flex items-center gap-2 px-3 bg-white/10 rounded-full py-2 border border-white/5">
-                        <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10h-2m0 0H9m2 0v2m0-2V8" />
-                        </svg>
+                        <button onClick={onZoomOut} className="text-white/60 hover:text-white transition-colors">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                            </svg>
+                        </button>
                         <input
                             type="range"
-                            min="50"
-                            max="200"
-                            value={zoomLevel}
-                            onChange={(e) => onZoomChange(Number(e.target.value))}
+                            min="0.5"
+                            max="3.0"
+                            step="0.1"
+                            value={zoom}
+                            onChange={onZoomChange}
                             className="w-16 sm:w-24 h-1.5 bg-white/20 rounded-full appearance-none cursor-pointer
                                 [&::-webkit-slider-thumb]:appearance-none
                                 [&::-webkit-slider-thumb]:w-3
@@ -188,11 +193,13 @@ const Controls = ({
                                 [&::-moz-range-thumb]:border-0
                                 [&::-moz-range-thumb]:shadow-lg
                                 [&::-moz-range-thumb]:cursor-pointer"
-                            title={`Zoom: ${zoomLevel}%`}
+                            title={`Zoom: ${Math.round(zoom * 100)}%`}
                         />
-                        <svg className="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 10h4" />
-                        </svg>
+                        <button onClick={onZoomIn} className="text-white/60 hover:text-white transition-colors">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
                     </div>
 
                     {/* Actions Group */}

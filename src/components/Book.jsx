@@ -63,8 +63,7 @@ function Book() {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isNightMode, setIsNightMode] = useState(false);
-  const [isZoomed, setIsZoomed] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(100);
+  const [zoom, setZoom] = useState(1.0);
 
   const pages = [
     { src: 'Layout/FRONT BOOK COVER.png', alt: 'Front Cover' },
@@ -264,15 +263,23 @@ function Book() {
   const handleTableOfContents = () => setActiveDialog('contents');
   const toggleNightMode = () => setIsNightMode(!isNightMode);
   const handlePrint = () => setActiveDialog('print');
-  const handleZoom = () => setIsZoomed(!isZoomed);
+
+  const handleZoomChange = (e) => {
+    const newValue = parseFloat(e.target.value);
+    setZoom(newValue);
+  };
+
+  const zoomIn = () => setZoom((prev) => Math.min(prev + 0.1, 3.0));
+  const zoomOut = () => setZoom((prev) => Math.max(prev - 0.1, 0.5));
 
   return (
     <div className="relative z-10 flex items-center justify-center">
       <div
         className="transition-transform duration-300 ease-in-out"
         style={{
-          transform: isZoomed ? 'scale(1.5)' : 'scale(1)',
-          transformOrigin: 'center center'
+          transform: `scale(${zoom})`,
+          transformOrigin: 'top center',
+          transition: 'transform 0.2s ease-out'
         }}
       >
         <HTMLFlipBook
@@ -370,8 +377,10 @@ function Book() {
         onJumpToCover={handleJumpToCover}
         onJumpToEnd={handleJumpToEnd}
         onJumpToPage={handleJumpToPage}
-        onZoom={handleZoom}
-        isZoomed={isZoomed}
+        zoom={zoom}
+        onZoomChange={handleZoomChange}
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
       />
 
       {/* Dialogs */}
