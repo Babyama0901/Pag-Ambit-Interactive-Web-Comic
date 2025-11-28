@@ -63,6 +63,7 @@ function Book() {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isNightMode, setIsNightMode] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   const pages = [
     { src: 'Layout/FRONT BOOK COVER.png', alt: 'Front Cover' },
@@ -262,79 +263,88 @@ function Book() {
   const handleTableOfContents = () => setActiveDialog('contents');
   const toggleNightMode = () => setIsNightMode(!isNightMode);
   const handlePrint = () => setActiveDialog('print');
+  const handleZoom = () => setIsZoomed(!isZoomed);
 
   return (
     <div className="relative z-10 flex items-center justify-center">
-      <HTMLFlipBook
-        width={450}
-        height={636}
-        size="fixed"
-        minWidth={318}
-        maxWidth={595}
-        minHeight={450}
-        maxHeight={842}
-        maxShadowOpacity={0.5}
-        showCover={true}
-        mobileScrollSupport={true}
-        usePortrait={false}
-        className="shadow-2xl"
-        ref={bookRef}
-        onFlip={handleFlip}
-        flippingTime={1000}
-        autoSize={false}
-        drawShadow={true}
-        useMouseEvents={true}
+      <div
+        className="transition-transform duration-300 ease-in-out"
+        style={{
+          transform: isZoomed ? 'scale(1.5)' : 'scale(1)',
+          transformOrigin: 'center center'
+        }}
       >
-        {/* Pages */}
-        {pages.map((page, index) => (
-          <div key={index} className="page bg-white">
-            <MediaPage
-              src={`${import.meta.env.BASE_URL}${page.src || ''}`}
-              alt={`Page ${index + 1}`}
-              pageNum={index + 1}
-              speechBubbleSrc={page.speechBubbleSrc}
-            />
-          </div>
-        ))}
-
-        {/* Back Cover */}
-        <div className="page cover bg-gradient-to-br from-indigo-900 via-purple-800 to-violet-900 text-white flex flex-col items-center justify-center p-8 border-l-4 border-purple-950 relative overflow-hidden"
-          style={{
-            backgroundSize: '200% 200%',
-            animation: 'gradientShift 8s ease infinite reverse'
-          }}>
-          <div className="absolute inset-0 opacity-30" style={{
-            background: 'radial-gradient(circle at 70% 50%, rgba(244, 218, 174, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 50%, rgba(245, 184, 15, 0.4) 0%, transparent 50%)',
-            animation: 'float 6s ease-in-out infinite reverse'
-          }}></div>
-
-          <div className="text-center space-y-6 relative z-10">
-            <div className="w-24 h-24 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner"
-              style={{
-                animation: 'float 4s ease-in-out infinite, pulseGlow 3s ease-in-out infinite'
-              }}>
-              <span className="text-3xl" style={{ animation: 'scaleIn 1s ease-out' }}>🏁</span>
+        <HTMLFlipBook
+          width={450}
+          height={636}
+          size="fixed"
+          minWidth={318}
+          maxWidth={595}
+          minHeight={450}
+          maxHeight={842}
+          maxShadowOpacity={0.5}
+          showCover={true}
+          mobileScrollSupport={true}
+          usePortrait={false}
+          className="shadow-2xl"
+          ref={bookRef}
+          onFlip={handleFlip}
+          flippingTime={1000}
+          autoSize={false}
+          drawShadow={true}
+          useMouseEvents={true}
+        >
+          {/* Pages */}
+          {pages.map((page, index) => (
+            <div key={index} className="page bg-white">
+              <MediaPage
+                src={`${import.meta.env.BASE_URL}${page.src || ''}`}
+                alt={`Page ${index + 1}`}
+                pageNum={index + 1}
+                speechBubbleSrc={page.speechBubbleSrc}
+              />
             </div>
+          ))}
 
-            <div style={{ animation: 'fadeInDown 1.2s ease-out 0.3s both' }}>
-              <h1 className="text-3xl font-black tracking-tighter mb-2 font-serif bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+          {/* Back Cover */}
+          <div className="page cover bg-gradient-to-br from-indigo-900 via-purple-800 to-violet-900 text-white flex flex-col items-center justify-center p-8 border-l-4 border-purple-950 relative overflow-hidden"
+            style={{
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 8s ease infinite reverse'
+            }}>
+            <div className="absolute inset-0 opacity-30" style={{
+              background: 'radial-gradient(circle at 70% 50%, rgba(244, 218, 174, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 50%, rgba(245, 184, 15, 0.4) 0%, transparent 50%)',
+              animation: 'float 6s ease-in-out infinite reverse'
+            }}></div>
+
+            <div className="text-center space-y-6 relative z-10">
+              <div className="w-24 h-24 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner"
                 style={{
-                  backgroundSize: '200% auto',
-                  animation: 'gradientShift 4s linear infinite, fadeInDown 1.2s ease-out 0.3s both'
+                  animation: 'float 4s ease-in-out infinite, pulseGlow 3s ease-in-out infinite'
                 }}>
-                THE END
-              </h1>
-              <p className="text-purple-200 text-xs tracking-[0.2em] uppercase" style={{ animation: 'fadeInUp 1.2s ease-out 0.5s both' }}>
-                Thanks for reading
-              </p>
-            </div>
+                <span className="text-3xl" style={{ animation: 'scaleIn 1s ease-out' }}>🏁</span>
+              </div>
 
-            <div className="pt-8" style={{ animation: 'fadeInUp 1.2s ease-out 0.7s both' }}>
-              <p className="text-[10px] text-purple-300/60">© 2024 Mel Creatives</p>
+              <div style={{ animation: 'fadeInDown 1.2s ease-out 0.3s both' }}>
+                <h1 className="text-3xl font-black tracking-tighter mb-2 font-serif bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+                  style={{
+                    backgroundSize: '200% auto',
+                    animation: 'gradientShift 4s linear infinite, fadeInDown 1.2s ease-out 0.3s both'
+                  }}>
+                  THE END
+                </h1>
+                <p className="text-purple-200 text-xs tracking-[0.2em] uppercase" style={{ animation: 'fadeInUp 1.2s ease-out 0.5s both' }}>
+                  Thanks for reading
+                </p>
+              </div>
+
+              <div className="pt-8" style={{ animation: 'fadeInUp 1.2s ease-out 0.7s both' }}>
+                <p className="text-[10px] text-purple-300/60">© 2024 Mel Creatives</p>
+              </div>
             </div>
           </div>
-        </div>
-      </HTMLFlipBook>
+        </HTMLFlipBook>
+      </div>
 
       {/* Controls */}
       <Controls
@@ -359,6 +369,8 @@ function Book() {
         onJumpToCover={handleJumpToCover}
         onJumpToEnd={handleJumpToEnd}
         onJumpToPage={handleJumpToPage}
+        onZoom={handleZoom}
+        isZoomed={isZoomed}
       />
 
       {/* Dialogs */}

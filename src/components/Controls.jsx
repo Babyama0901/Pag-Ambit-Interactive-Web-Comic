@@ -22,7 +22,8 @@ const Controls = ({
     onJumpToCover,
     onJumpToEnd,
     onJumpToPage,
-    onMagnifier
+    onZoom,
+    isZoomed
 }) => {
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [showHelp, setShowHelp] = useState(false);
@@ -126,7 +127,7 @@ const Controls = ({
                             <MenuButton icon="M4 6h16M4 12h16M4 18h16" label="Contents" onClick={onTableOfContents} />
                             <MenuButton icon="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" label="Bookmark" onClick={onBookmark} />
                             <MenuButton icon="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" label="Search" onClick={onSearch} />
-                            <MenuButton icon="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" label="Magnifier" onClick={onMagnifier} />
+                            <MenuButton icon="M21 15l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 13l6 6" label="Zoom" onClick={onZoom} active={isZoomed} />
 
                             <MenuButton icon="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" label="Share" onClick={onShare} />
                             <MenuButton icon="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" label={isNightMode ? "Day Mode" : "Night Mode"} onClick={onToggleNightMode} active={isNightMode} />
