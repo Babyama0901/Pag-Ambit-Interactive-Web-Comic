@@ -374,14 +374,29 @@ function Book() {
         onClose={() => setActiveDialog(null)}
         title="Table of Contents"
       >
-        <div className="space-y-2">
+        <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
           {[
-            { title: "Cover", page: 0 },
+            { title: "Front Cover", page: 0 },
             { title: "Scene 1", page: 1 },
-            { title: "Scene 5", page: 4 },
-            { title: "Scene 6", page: 10 },
-            { title: "Scene 7", page: 16 },
-            { title: "Scene 8", page: 20 }
+            { title: "Scene 2", page: 4 },
+            { title: "Scene 3", page: 8 },
+            { title: "Scene 4", page: 12 },
+            { title: "Scene 5", page: 16 },
+            { title: "Scene 6", page: 22 },
+            { title: "Scene 7", page: 24 },
+            { title: "Scene 8", page: 26 },
+            { title: "Scene 9", page: 28 },
+            { title: "Scene 10", page: 30 },
+            { title: "Scene 11", page: 31 },
+            { title: "Scene 12", page: 34 },
+            { title: "Scene 13", page: 37 },
+            { title: "Scene 14", page: 39 },
+            { title: "Scene 15", page: 42 },
+            { title: "Scene 16", page: 44 },
+            { title: "Scene 17", page: 46 },
+            { title: "Scene 18", page: 48 },
+            { title: "Scene 19", page: 51 },
+            { title: "Scene 20", page: 52 }
           ].map((item, index) => (
             <button
               key={index}
@@ -416,7 +431,7 @@ function Book() {
             <span>+ Add Current Page ({currentPage + 1})</span>
           </button>
 
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-96 overflow-y-auto pr-2">
             <h3 className="text-white/60 text-sm font-medium uppercase tracking-wider ml-1">Saved Bookmarks</h3>
             {localStorage.getItem('bookmarkedPage') ? (
               <button
