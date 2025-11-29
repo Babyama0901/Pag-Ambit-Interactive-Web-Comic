@@ -315,41 +315,12 @@ function Book() {
           ))}
 
           {/* Back Cover */}
-          <div className="page cover bg-gradient-to-br from-indigo-900 via-purple-800 to-violet-900 text-white flex flex-col items-center justify-center p-8 border-l-4 border-purple-950 relative overflow-hidden"
-            style={{
-              backgroundSize: '200% 200%',
-              animation: 'gradientShift 8s ease infinite reverse'
-            }}>
-            <div className="absolute inset-0 opacity-30" style={{
-              background: 'radial-gradient(circle at 70% 50%, rgba(244, 218, 174, 0.4) 0%, transparent 50%), radial-gradient(circle at 30% 50%, rgba(245, 184, 15, 0.4) 0%, transparent 50%)',
-              animation: 'float 6s ease-in-out infinite reverse'
-            }}></div>
-
-            <div className="text-center space-y-6 relative z-10">
-              <div className="w-24 h-24 mx-auto bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner"
-                style={{
-                  animation: 'float 4s ease-in-out infinite, pulseGlow 3s ease-in-out infinite'
-                }}>
-                <span className="text-3xl" style={{ animation: 'scaleIn 1s ease-out' }}>🏁</span>
-              </div>
-
-              <div style={{ animation: 'fadeInDown 1.2s ease-out 0.3s both' }}>
-                <h1 className="text-3xl font-black tracking-tighter mb-2 font-serif bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
-                  style={{
-                    backgroundSize: '200% auto',
-                    animation: 'gradientShift 4s linear infinite, fadeInDown 1.2s ease-out 0.3s both'
-                  }}>
-                  THE END
-                </h1>
-                <p className="text-purple-200 text-xs tracking-[0.2em] uppercase" style={{ animation: 'fadeInUp 1.2s ease-out 0.5s both' }}>
-                  Thanks for reading
-                </p>
-              </div>
-
-              <div className="pt-8" style={{ animation: 'fadeInUp 1.2s ease-out 0.7s both' }}>
-                <p className="text-[10px] text-purple-300/60">© 2024 Mel Creatives</p>
-              </div>
-            </div>
+          <div className="page cover bg-white">
+            <MediaPage
+              src={`${import.meta.env.BASE_URL}Layout/BACK BOOK COVER.png`}
+              alt="Back Cover"
+              pageNum={pages.length + 1}
+            />
           </div>
         </HTMLFlipBook>
       </div>
