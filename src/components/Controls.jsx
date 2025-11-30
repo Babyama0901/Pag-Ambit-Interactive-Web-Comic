@@ -138,6 +138,7 @@ const Controls = ({
                             <MenuButton icon="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2.4-9h6m-1 6v6m-4-6v6m2-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 14h16" label="Print" onClick={onPrint} />
 
                             <MenuButton icon="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" label="Notes" onClick={onNotes} />
+                            <MenuButton icon="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" label="Survey" onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfYRcTWuNWiLPIFYqDup_AFKk48XFBGkSWXTGrUS93fB3zlPg/viewform?usp=dialog', '_blank')} />
                         </div>
 
 
